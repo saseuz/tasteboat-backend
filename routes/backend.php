@@ -22,21 +22,13 @@ Route::group([
         ->middleware('admin.auth');
 
     Route::middleware('admin.auth')->group(function () {
-        Route::get('/', function(){
-            return inertia('Home');
-        });
-
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, '__invoke'])->name('dashboard');
+        Route::resource('admins', AdminController::class);
     });
 
     // Route::get('site-settings', [DashboardController::class, 'settings'])->name('site-settings');
 
     // Route::resource('roles', RoleController::class);
     // Route::post('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
-
-    // Route::resource('admins', AdminController::class);
 });
 
-Route::get('/', function () {
-    return Inertia::render('Home');
-});

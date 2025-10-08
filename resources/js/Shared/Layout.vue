@@ -3,15 +3,21 @@ import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import config from '@/helpers/config';
 import { Bell, LayoutDashboard, PanelsTopLeft, Users } from 'lucide-vue-next';
+import Sidebar from '@/Shared/Sidebar.vue';
 
 const page = usePage();
 
 const username = computed(() => 
-    page.props.auth?.user?.username || 'Guest'
+    page.props.auth?.user?.username
 )
 </script>
 
 <template>
+
+    <Head>
+        <title>My App</title>
+        <meta name="description" content="A simple Inertia.js app with vue3" head-key="description" />
+    </Head>
     
     <div class="relative min-h-screen flex flex-col dark group/design-root">
         <div class="flex h-full grow flex-row">
@@ -21,29 +27,13 @@ const username = computed(() =>
                     <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">{{ config.app_name  }}</h2>
                 </div>
 
-                <ul class="text-sm">
-                    <li>
-                        <Link 
-                            :href="route(config.admin_route_name + 'dashboard')"
-                            class="flex items-center gap-3 my-1 p-2 rounded-md text-gray-400 hover:bg-[#137fec] hover:text-white transition fade-in-5"
-                            >
-                            <LayoutDashboard class="size-5" />
-                            <span>Dashboard</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link 
-                            :href="route(config.admin_route_name + 'dashboard')"
-                            class="flex items-center gap-3 my-1 p-2 rounded-md text-gray-400 hover:bg-[#137fec] hover:text-white transition fade-in-5"
-                            >
-                            <Users class="size-5" />
-                            User
-                        </Link>
-                    </li>
-                </ul>
+                <Sidebar />
 
-                <Link class="mt-auto bg-red-400">
-                    Profile
+                <Link 
+                    method="post"
+                    :href="route(config.admin_route_name + 'logout')"
+                    class="mt-auto bg-red-400">
+                    Logout
                 </Link>
             </aside>
 
@@ -55,6 +45,10 @@ const username = computed(() =>
 
                     <span><Bell /></span>
                 </header>
+
+                <main class="flex-grow p-6 bg-[#0b141e]">
+                    <slot />
+                </main>
             </section>
         </div>
     </div>

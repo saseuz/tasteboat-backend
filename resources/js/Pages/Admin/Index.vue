@@ -16,6 +16,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import config from '@/helpers/config'
 import { Plus } from 'lucide-vue-next';
 
@@ -84,12 +95,44 @@ let props = defineProps({
                         {{ role.name }}
                         </span>
                     </TableCell>
-                    <TableCell class="text-right">
+                    <TableCell class="text-right space-x-2">
                         <Link
+                            :href="route(config.admin_route_name + 'admins.edit', admin.id)"
                             class="text-blue-600 hover:underline"
                         >
                             Edit
                         </Link>
+                        <!-- <Link
+                            :href="route(config.admin_route_name + 'admins.edit', admin.id)"
+                            class="text-red-600 hover:underline"
+                        >
+                            Delete
+                        </Link> -->
+                        <AlertDialog>
+                            <AlertDialogTrigger class="text-red-600 hover:underline">Delete</AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete your account
+                                    and remove your data from our servers.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction asChild>
+                                        <Link
+                                            :href="route(config.admin_route_name + 'admins.destroy', admin.id)"
+                                            method="delete"
+                                            as="button"
+                                            class="bg-red-600 hover:bg-red-600/80 text-white font-semibold py-2 px-4 rounded shadow transition"
+                                        >
+                                            Confirm
+                                        </Link>
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </TableCell>
                 </TableRow>
             </TableBody>

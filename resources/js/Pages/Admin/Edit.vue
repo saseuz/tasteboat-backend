@@ -15,19 +15,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useForm } from '@inertiajs/vue3'
 
 let props = defineProps({
+    admin: Object,
+    current_role: [String, Number],
     roles: Object,
 });
 
+console.log(props.current_role);
+
 let form = useForm({
-    email: '',
+    email: props.admin.email,
     password: '',
     password_confirmation: '',
-    name: '',
-    role: '',
+    old_password: '',
+    name: props.admin.name,
+    role: props.current_role,
 });
 
 let submit = () => {
-    form.post(route(config.admin_route_name + 'admins.store'), {
+    form.put(route(config.admin_route_name + 'admins.update', props.admin.id), {
         onSuccess: () => {
             form.reset();
         },
@@ -37,7 +42,7 @@ let submit = () => {
 </script>
 
 <template>
-    <Head title="Admin Create" />
+    <Head title="Admin Edit" />
 
     <div class="mb-6">
         <Breadcrumb>
@@ -55,14 +60,14 @@ let submit = () => {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                    <BreadcrumbPage>Create</BreadcrumbPage>
+                    <BreadcrumbPage>Edit</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
     </div>
 
     <div class="bg-secondary p-4 rounded shadow text-primary">
-        <h1 class="text-xl">Admin Create</h1>
+        <h1 class="text-xl">Admin Edit</h1>
     </div>
 
     <div class="mt-4 bg-secondary p-4 rounded shadow text-primary">
@@ -78,10 +83,10 @@ let submit = () => {
 
                 <div class="space-y-2">
                     <Label htmlFor="password" class="text-sm font-medium">
-                        Password <span class="text-red-600">*</span>
+                        Old Password<span class="text-red-600">*</span>
                     </Label>
-                    <Input id="password" type="password" v-model="form.password" required placeholder="Enter Password" class="w-full shadow-xl" />
-                    <span v-if="form.errors.password" class="text-red-600 text-sm font-medium">{{ form.errors.password }}</span>
+                    <Input id="password" type="password" v-model="form.old_password" placeholder="Enter Old Password" class="w-full shadow-xl" />
+                    <span v-if="form.errors.old_password" class="text-red-600 text-sm font-medium">{{ form.errors.old_password }}</span>
                 </div>
 
                 <div class="space-y-2">
@@ -93,10 +98,10 @@ let submit = () => {
                 </div>
 
                 <div class="space-y-2">
-                    <Label htmlFor="confirm_password" class="text-sm font-medium">
-                        Confirm Password <span class="text-red-600">*</span>
+                    <Label htmlFor="password" class="text-sm font-medium">
+                        Password <span class="text-red-600">*</span>
                     </Label>
-                    <Input id="confirm_password" type="password" v-model="form.password_confirmation" required placeholder="Confirm Password" class="w-full shadow-xl" />
+                    <Input id="password" type="password" v-model="form.password" placeholder="Enter Password" class="w-full shadow-xl" />
                     <span v-if="form.errors.password" class="text-red-600 text-sm font-medium">{{ form.errors.password }}</span>
                 </div>
 
@@ -114,6 +119,15 @@ let submit = () => {
                     </Select>
                     <span v-if="form.errors.role" class="text-red-600 text-sm font-medium">{{ form.errors.role }}</span>
                 </div>
+
+                <div class="space-y-2">
+                    <Label htmlFor="confirm_password" class="text-sm font-medium">
+                        Confirm Password <span class="text-red-600">*</span>
+                    </Label>
+                    <Input id="confirm_password" type="password" v-model="form.password_confirmation" placeholder="Confirm Password" class="w-full shadow-xl" />
+                    <span v-if="form.errors.password" class="text-red-600 text-sm font-medium">{{ form.errors.password }}</span>
+                </div>
+
             </div>
 
             <div class="flex gap-3 mt-8">

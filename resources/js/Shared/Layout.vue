@@ -3,6 +3,8 @@ import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import config from '@/helpers/config';
 import { Bell, LayoutDashboard, PanelsTopLeft, Users } from 'lucide-vue-next';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { AlertCircle } from "lucide-vue-next"
 import Sidebar from '@/Shared/Sidebar.vue';
 
 const page = usePage();
@@ -10,12 +12,20 @@ const page = usePage();
 const username = computed(() => 
     page.props.auth?.user?.username
 )
+
+const flashSuccess = computed(() =>
+    page.props.flash?.success
+)
+
+const flashError = computed(() =>
+    page.props.flash?.error
+)
 </script>
 
 <template>
 
     <Head>
-        <title>My App</title>
+        <title>{{ config.app_name  }}</title>
         <meta name="description" content="A simple Inertia.js app with vue3" head-key="description" />
     </Head>
     
@@ -46,7 +56,26 @@ const username = computed(() =>
                     <span><Bell /></span>
                 </header>
 
+                
                 <main class="flex-grow p-6 bg-[#0b141e]">
+                    <div class="flex" v-if="flashSuccess">
+                        <Alert>
+                            <AlertTitle>Success!</AlertTitle>
+                            <AlertDescription>
+                            {{  flashSuccess }}
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                    <div class="flex" v-if="flashError">
+                        <Alert variant="destructive">
+                            <AlertCircle class="w-4 h-4" />
+                            <AlertTitle>Error!</AlertTitle>
+                            <AlertDescription>
+                            {{  flashError }}
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+
                     <slot />
                 </main>
             </section>

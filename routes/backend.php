@@ -24,11 +24,10 @@ Route::group([
     Route::middleware('admin.auth')->group(function () {
         Route::get('dashboard', [DashboardController::class, '__invoke'])->name('dashboard');
         Route::resource('admins', AdminController::class);
+        Route::resource('roles', RoleController::class);
+        Route::post('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
     });
 
     // Route::get('site-settings', [DashboardController::class, 'settings'])->name('site-settings');
-
-    // Route::resource('roles', RoleController::class);
-    // Route::post('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
 });
 

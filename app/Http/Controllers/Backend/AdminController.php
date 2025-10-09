@@ -28,7 +28,7 @@ class AdminController extends Controller
     public function create()
     {
         $roles = Role::where('guard_name', 'admin')
-                    // ->where('name', '!=', 'super-admin')
+                    ->where('name', '!=', 'super-admin')
                     ->pluck('name', 'id');
 
         return Inertia::render('Admin/Create', [
@@ -70,7 +70,7 @@ class AdminController extends Controller
     {
         $admin = Admin::with('roles')->findOrFail($id);
         $roles = Role::where('guard_name', 'admin')
-                    // ->where('name', '!=', 'super-admin')
+                    ->where('name', '!=', 'super-admin')
                     ->pluck('name', 'id');
 
         return Inertia::render('Admin/Edit',[

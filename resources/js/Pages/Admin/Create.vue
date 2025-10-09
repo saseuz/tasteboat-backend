@@ -1,18 +1,11 @@
 <script setup>
 import config from '@/helpers/config'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useForm } from '@inertiajs/vue3'
+import BreadcrumbT from '@/Shared/BreadcrumbT.vue'
 
 let props = defineProps({
     roles: Object,
@@ -24,6 +17,10 @@ let form = useForm({
     password_confirmation: '',
     name: '',
     role: '',
+    breadscrumbs: [
+        { label: 'Admin', url: route(config.admin_route_name + 'admins.index') },
+        { label: 'Create' },
+    ],
 });
 
 let submit = () => {
@@ -40,25 +37,7 @@ let submit = () => {
     <Head title="Admin Create" />
 
     <div class="mb-6">
-        <Breadcrumb>
-            <BreadcrumbList>
-                <BreadcrumbItem>
-                    <BreadcrumbLink :href="route(config.admin_route_name + 'dashboard')">
-                    Dashboard
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbLink :href="route(config.admin_route_name + 'admins.index')">
-                    Admin
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbPage>Create</BreadcrumbPage>
-                </BreadcrumbItem>
-            </BreadcrumbList>
-        </Breadcrumb>
+        <BreadcrumbT :items="form.breadscrumbs" />
     </div>
 
     <div class="bg-secondary p-4 rounded shadow text-primary">

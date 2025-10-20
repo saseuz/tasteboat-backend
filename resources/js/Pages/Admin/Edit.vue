@@ -13,8 +13,6 @@ let props = defineProps({
     roles: Object,
 });
 
-console.log(props.current_role);
-
 let form = useForm({
     email: props.admin.email,
     password: '',

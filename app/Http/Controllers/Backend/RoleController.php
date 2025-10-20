@@ -10,6 +10,15 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view-role,admin')->only(['index', 'show']);
+        $this->middleware('permission:create-role,admin')->only(['create', 'store']);
+        $this->middleware('permission:assign-permissions,admin')->only(['show', 'updatePermissions']);
+        $this->middleware('permission:update-role,admin')->only(['edit', 'update']);
+        $this->middleware('permission:delete-role,admin')->only(['destroy']);
+    }
+
     public function index()
     {
         $roles = Role::where('name', '!=', 'super-admin')->paginate();

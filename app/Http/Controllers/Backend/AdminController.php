@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view-admin,admin')->only(['index', 'show']);
+        $this->middleware('permission:create-admin,admin')->only(['create', 'store']);
+        $this->middleware('permission:update-admin,admin')->only(['edit', 'update']);
+        $this->middleware('permission:delete-admin,admin')->only(['destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      */

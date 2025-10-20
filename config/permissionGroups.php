@@ -24,6 +24,7 @@ return [
             'create-role',
             'update-role',
             'delete-role',
+            'assign-permissions',
         ]
     ]
 ];

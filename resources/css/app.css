@@ -132,3 +132,13 @@
     @apply bg-background text-foreground;
     }
 }
+
+@layer components {
+    .sidebar_link {
+        @apply flex items-center gap-3 my-1 p-2 rounded-md text-gray-400 hover:bg-[#137fec] hover:text-white transition fade-in-5;
+    }
+
+    .sidebar_link.active {
+        @apply bg-[#137fec] text-white font-semibold;
+    }
+}

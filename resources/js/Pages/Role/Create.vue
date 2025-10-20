@@ -25,6 +25,9 @@ let form = useForm({
     </div>
 
     <div class="mt-4 bg-secondary p-4 rounded shadow text-primary">
-        <Form routeName="roles.store" />
+        <Form routeName="roles.store" v-if="$can('create-role')" />
+        <div class="my-4" v-else>
+            You don't have permission to create.
+        </div>
     </div>
 </template>

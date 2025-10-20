@@ -9,7 +9,10 @@ import config from '@/helpers/config'
         <li v-if="$can('view-dashboard')">
             <Link 
                 :href="route(config.admin_route_name + 'dashboard')"
-                class="flex items-center gap-3 my-1 p-2 rounded-md text-gray-400 hover:bg-[#137fec] hover:text-white transition fade-in-5"
+                :class="[
+                    'sidebar_link',
+                    route().current(config.admin_route_name + 'dashboard') ? 'active': ''
+                ]"
                 >
                 <LayoutDashboard class="size-5" />
                 <span>Dashboard</span>
@@ -18,7 +21,10 @@ import config from '@/helpers/config'
         <li v-if="$can('view-admin')">
             <Link 
                 :href="route(config.admin_route_name + 'admins.index')"
-                class="flex items-center gap-3 my-1 p-2 rounded-md text-gray-400 hover:bg-[#137fec] hover:text-white transition fade-in-5"
+                :class="[
+                    'sidebar_link',
+                    route().current(config.admin_route_name + 'admins.index') ? 'active': ''
+                ]"
                 >
                 <Users class="size-5" />
                 Admin
@@ -27,7 +33,10 @@ import config from '@/helpers/config'
         <li v-if="$can('view-role')">
             <Link 
                 :href="route(config.admin_route_name + 'roles.index')"
-                class="flex items-center gap-3 my-1 p-2 rounded-md text-gray-400 hover:bg-[#137fec] hover:text-white transition fade-in-5"
+                :class="[
+                    'sidebar_link',
+                    route().current(config.admin_route_name + 'roles.index') ? 'active': ''
+                ]"
                 >
                 <Gavel class="size-5" />
                 Role

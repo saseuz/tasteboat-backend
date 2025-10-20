@@ -43,13 +43,14 @@ let form = useForm({
     <div class="mt-4 bg-secondary p-4 rounded shadow text-primary">
         <div class="flex justify-end mb-4">
             <Link 
+                v-if="$can('create-role')"
                 :href="route(config.admin_route_name + 'roles.create')"
                 class="flex items-center gap-2 bg-[#2a3f5f] hover:bg-[#2a3f5f]/50 text-white font-semibold py-2 px-4 rounded shadow transition"
             >
                 <Plus /> Create
             </Link>
         </div>
-        <Table class="bg-[#243447] rounded">
+        <Table class="bg-[#243447] rounded" v-if="$can('view-role')">
             <TableCaption>A list of your recent roles.</TableCaption>
             <TableHeader>
                 <TableRow>
@@ -70,22 +71,31 @@ let form = useForm({
                     <TableCell>{{ role.name  }}</TableCell>
                     <TableCell class="text-right space-x-2">
                         <Link
+                            v-if="$can('assign-permissions')"
                             :href="route(config.admin_route_name + 'roles.show', role.id)"
                             class="text-blue-400 hover:underline"
                         >
                             Show
                         </Link>
                         <Link
+                            v-if="$can('update-role')"
                             :href="route(config.admin_route_name + 'roles.edit', role.id)"
                             class="text-blue-600 hover:underline"
                         >
                             Edit
                         </Link>
-                        <DeleteDialog :data="form.deleteDialog" :route="route(config.admin_route_name + 'roles.destroy', role.id)" />
+                        <DeleteDialog 
+                            :data="form.deleteDialog" 
+                            :route="route(config.admin_route_name + 'roles.destroy', role.id)"
+                            v-if="$can('delete-role')"
+                         />
                     </TableCell>
                 </TableRow>
             </TableBody>
         </Table>
+        <div class="mb-4" v-else>
+            You don't have permission to view list.
+        </div>
     </div>
     
 </template>

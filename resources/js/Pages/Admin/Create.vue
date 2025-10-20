@@ -45,7 +45,11 @@ let submit = () => {
     </div>
 
     <div class="mt-4 bg-secondary p-4 rounded shadow text-primary">
-        <form @submit.prevent="submit" class="w-full max-w-full bg-gray-800 rounded shadow p-4">
+        <form 
+            @submit.prevent="submit" 
+            class="w-full max-w-full bg-gray-800 rounded shadow p-4"
+            v-if="$can('create-admin')"
+        >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
                 <div class="space-y-2">
                     <Label htmlFor="email" class="text-sm font-medium">
@@ -104,5 +108,8 @@ let submit = () => {
                 </Button>
             </div>
         </form>
+        <div class="my-4" v-else>
+            You don't have permission to create.
+        </div>
     </div>
 </template>

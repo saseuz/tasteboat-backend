@@ -32,6 +32,9 @@ let form = useForm({
     </div>
 
     <div class="mt-4 bg-secondary p-4 rounded shadow text-primary">
-        <Form routeName="roles.update" :isEdit="true" :role="props.role"/>
+        <Form routeName="roles.update" :isEdit="true" :role="props.role" v-if="$can('update-role')"/>
+        <div class="mb-4" v-else>
+            You don't have permission to edit.
+        </div>
     </div>
 </template>

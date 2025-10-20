@@ -44,13 +44,14 @@ let form = useForm({
     <div class="mt-4 bg-secondary p-4 rounded shadow text-primary">
         <div class="flex justify-end mb-4">
             <Link 
+                v-if="$can('create-admin')"
                 :href="route(config.admin_route_name + 'admins.create')"
                 class="flex items-center gap-2 bg-[#2a3f5f] hover:bg-[#2a3f5f]/50 text-white font-semibold py-2 px-4 rounded shadow transition"
             >
                 <Plus /> Create
             </Link>
         </div>
-        <Table class="bg-[#243447] rounded">
+        <Table class="bg-[#243447] rounded" v-if="$can('view-admin')">
             <TableCaption>A list of your recent admins.</TableCaption>
             <TableHeader>
                 <TableRow>
@@ -79,16 +80,23 @@ let form = useForm({
                     </TableCell>
                     <TableCell class="text-right space-x-2">
                         <Link
+                            v-if="$can('update-admin')"
                             :href="route(config.admin_route_name + 'admins.edit', admin.id)"
                             class="text-blue-600 hover:underline"
                         >
                             Edit
                         </Link>
-                        <DeleteDialog :data="form.deleteDialog" :route="route(config.admin_route_name + 'admins.destroy', admin.id)" />
+                        <DeleteDialog 
+                            v-if="$can('delete-admin')"
+                            :data="form.deleteDialog" 
+                            :route="route(config.admin_route_name + 'admins.destroy', admin.id)" />
                     </TableCell>
                 </TableRow>
             </TableBody>
         </Table>
+        <div class="mb-4" v-else>
+            You don't have permission to view list.
+        </div>
     </div>
     
 </template>

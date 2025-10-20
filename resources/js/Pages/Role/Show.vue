@@ -60,7 +60,7 @@ const submit = () => {
     </div>
 
     <div class="mt-4 bg-secondary p-4 rounded shadow text-primary">
-        <div class="w-full max-w-full bg-gray-800 rounded shadow p-4">
+        <div class="w-full max-w-full bg-gray-800 rounded shadow p-4" v-if="$can('assign-permissions')">
             <h2 class="text-lg">Role Name: {{ role.name }}</h2>
 
             <div class="mt-4">
@@ -98,6 +98,9 @@ const submit = () => {
                     </div>
                 </form>
             </div>
+        </div>
+        <div class="mb-4" v-else>
+            You don't have permission to view detail.
         </div>
     </div>
     

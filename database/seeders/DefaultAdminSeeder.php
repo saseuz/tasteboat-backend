@@ -22,7 +22,7 @@ class DefaultAdminSeeder extends Seeder
         ]);
 
         $admin = Admin::firstOrCreate([
-            'email' => 'superadmin@example.com',
+            'email' => 'superadmin@gmail.com',
         ], [
             'name'  => 'Super Admin',
             'password' => '123123',

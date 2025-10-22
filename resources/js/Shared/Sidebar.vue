@@ -1,5 +1,5 @@
 <script setup>
-import { LayoutDashboard, Users, Gavel } from 'lucide-vue-next';
+import { LayoutDashboard, Users, Gavel, User } from 'lucide-vue-next';
 import config from '@/helpers/config'
 
 </script>
@@ -40,6 +40,18 @@ import config from '@/helpers/config'
                 >
                 <Gavel class="size-5" />
                 Role
+            </Link>
+        </li>
+        <li v-if="$can('view-user')">
+            <Link 
+                :href="route(config.admin_route_name + 'users.index')"
+                :class="[
+                    'sidebar_link',
+                    route().current(config.admin_route_name + 'users.index') ? 'active': ''
+                ]"
+                >
+                <User class="size-5" />
+                User
             </Link>
         </li>
     </ul>

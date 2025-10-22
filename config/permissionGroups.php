@@ -26,5 +26,14 @@ return [
             'delete-role',
             'assign-permissions',
         ]
-    ]
+    ],
+    [
+        'name' => 'User Management',
+        'permissions' => [
+            'view-user',
+            'create-user',
+            'update-user',
+            'delete-user',
+        ]
+    ],
 ];

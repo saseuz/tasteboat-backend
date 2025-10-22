@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\UserController;
 
 Route::group([
     'prefix' => admin_route(),
@@ -26,6 +27,11 @@ Route::group([
         Route::resource('admins', AdminController::class);
         Route::resource('roles', RoleController::class);
         Route::post('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
+
+        Route::get('users', [UserController::class, 'index'])->name('users.index');
+        Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::post('users/{user}/update-status', [UserController::class, 'updateStatus'])->name('users.update-status');
     });
 
     // Route::get('site-settings', [DashboardController::class, 'settings'])->name('site-settings');

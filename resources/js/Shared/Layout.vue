@@ -58,7 +58,7 @@ const flashError = computed(() =>
 
                 
                 <main class="flex-grow p-6 bg-[#0b141e]">
-                    <div class="flex" v-if="flashSuccess">
+                    <div class="flex mb-4" v-if="flashSuccess">
                         <Alert>
                             <AlertTitle>Success!</AlertTitle>
                             <AlertDescription>
@@ -66,7 +66,7 @@ const flashError = computed(() =>
                             </AlertDescription>
                         </Alert>
                     </div>
-                    <div class="flex" v-if="flashError">
+                    <div class="flex mb-4" v-if="flashError">
                         <Alert variant="destructive">
                             <AlertCircle class="w-4 h-4" />
                             <AlertTitle>Error!</AlertTitle>

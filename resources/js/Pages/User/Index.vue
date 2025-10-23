@@ -75,7 +75,7 @@ let form = useForm({
                     <TableCell>{{ user.email }}</TableCell>
                     <TableCell>
                         <span 
-                            class="inline-block text-xs uppercase px-2 rounded mr-1"
+                            class="inline-block text-xs uppercase font-semibold px-2 rounded mr-1"
                             :class="user.status == 'active' ? 'bg-blue-200 text-blue-800' : 'bg-red-200 text-red-800'"
                         >
                             {{ user.status }}

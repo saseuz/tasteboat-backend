@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\AuthController;
+use App\Http\Controllers\Backend\CuisineController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
@@ -32,6 +33,8 @@ Route::group([
         Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
         Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::post('users/{user}/update-status', [UserController::class, 'updateStatus'])->name('users.update-status');
+
+        Route::resource('cuisines', CuisineController::class);
     });
 
     // Route::get('site-settings', [DashboardController::class, 'settings'])->name('site-settings');

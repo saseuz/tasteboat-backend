@@ -1,5 +1,5 @@
 <script setup>
-import { LayoutDashboard, Users, Gavel, User } from 'lucide-vue-next';
+import { LayoutDashboard, Users, Gavel, User, Earth } from 'lucide-vue-next';
 import config from '@/helpers/config'
 
 </script>
@@ -52,6 +52,18 @@ import config from '@/helpers/config'
                 >
                 <User class="size-5" />
                 User
+            </Link>
+        </li>
+        <li v-if="$can('view-cuisine')">
+            <Link 
+                :href="route(config.admin_route_name + 'cuisines.index')"
+                :class="[
+                    'sidebar_link',
+                    route().current(config.admin_route_name + 'cuisines.index') ? 'active': ''
+                ]"
+                >
+                <Earth class="size-5" />
+                Cuisine
             </Link>
         </li>
     </ul>

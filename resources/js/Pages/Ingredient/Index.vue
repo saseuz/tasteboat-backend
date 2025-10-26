@@ -57,6 +57,7 @@ let form = useForm({
                     <TableHead class="w-[100px]">
                     ID
                     </TableHead>
+                    <TableHead>Recipe</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead class="text-right">
                     Action
@@ -68,6 +69,7 @@ let form = useForm({
                     <TableCell class="font-medium">
                     {{ ingredient.id}}
                     </TableCell>
+                    <TableCell>{{ ingredient.recipe.title  }}</TableCell>
                     <TableCell>{{ ingredient.name  }}</TableCell>
                     <TableCell class="text-right space-x-2">
                         <!-- <Link

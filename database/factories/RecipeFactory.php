@@ -30,7 +30,7 @@ class RecipeFactory extends Factory
             'cuisine_id' => Cuisine::factory(),
             'title' => fake()->sentence(3),
             'description' => fake()->paragraph(),
-            'instructrions' => fake()->text(300),
+            'instructions' => fake()->text(300),
             'thumbnail' => fake()->imageUrl(640, 480, 'recipe', true),
             'prep_time' => fake()->numberBetween(1, 10),
             'cook_time' => fake()->numberBetween(10, 60),

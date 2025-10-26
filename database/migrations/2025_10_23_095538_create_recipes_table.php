@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('description');
-            $table->longText('instructrions');
+            $table->longText('instructions');
             $table->integer('prep_time'); // prepare time
             $table->integer('cook_time'); // cooking time
             $table->integer('servings'); // number of servings
@@ -24,8 +24,6 @@ return new class extends Migration
             $table->string('thumbnail')->nullable();
             $table->enum('status', ['draft', 'published']);
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // user_id
-            $table->uuid('cuisine_id')->nullable();
-            $table->foreign('cuisine_id')->references('id')->on('cuisines')->onDelete('cascade');
             $table->timestamps();
         });
     }

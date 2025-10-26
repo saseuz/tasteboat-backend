@@ -26,8 +26,8 @@ class IngredientFactory extends Factory
             'name' => fake()->word(),
             'quantity' => fake()->randomNumber().fake()->word(),
             'unit' => fake()->randomNumber().fake()->word(),
-            'note' => fake()->paragraph(),
-            'recipe_id' => Recipe::factory(),
+            'note' => fake()->sentence(),
+            'recipe_id' => Recipe::inRandomOrder()->value('id') ?? Recipe::factory(),
             
         ];
     }

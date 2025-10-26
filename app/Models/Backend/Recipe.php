@@ -19,7 +19,7 @@ class Recipe extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'title', 'slug', 'description', 'instructrions', 'prep_time', 'cook_time',
+        'title', 'slug', 'description', 'instructions', 'prep_time', 'cook_time',
         'servings', 'difficulty', 'thumbnail', 'status', 'cuisine_id'
     ];
 

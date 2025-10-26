@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\AuthController;
+use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\CuisineController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\IngredientController;
@@ -36,6 +37,7 @@ Route::group([
         Route::post('users/{user}/update-status', [UserController::class, 'updateStatus'])->name('users.update-status');
 
         Route::resource('cuisines', CuisineController::class);
+        Route::resource('categories', CategoryController ::class);
         Route::resource('ingredients', IngredientController ::class);
     });
 

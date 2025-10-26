@@ -5,18 +5,18 @@ namespace App\Models\Backend;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Ingredient extends Model
+class Category extends Model
 {
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name', 'quantity', 'unit', 'note', 'recipe_id'
+        'name', 'slug'
     ];
 
-    public function recipe()
+    public function recipes()
     {
-        return $this->belongsTo(Recipe::class);
+        return $this->hasMany(Recipe::class);
     }
 
     protected static function boot()
@@ -27,6 +27,10 @@ class Ingredient extends Model
             if (! $model->getKey()) {
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
+            if (empty($model->slug)) {
+                $model->slug = Str::slug($model->name);
+            }
         });
+
     }
 }

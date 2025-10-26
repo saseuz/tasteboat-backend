@@ -46,6 +46,15 @@ return [
         ]
     ],
     [
+        'name' => 'Category Management',
+        'permissions' => [
+            'view-category',
+            'create-category',
+            'update-category',
+            'delete-category',
+        ]
+    ],
+    [
         'name' => 'Ingredient Management',
         'permissions' => [
             'view-ingredient',
@@ -54,4 +63,5 @@ return [
             'delete-ingredient',
         ]
     ],
+    
 ];

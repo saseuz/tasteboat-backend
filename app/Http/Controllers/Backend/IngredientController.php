@@ -105,7 +105,7 @@ class IngredientController extends Controller
      */
     public function destroy(string $id)
     {
-        $ingredient = Ingredient::with('recipe')->findOrFail($id);
+        $ingredient = Ingredient::findOrFail($id);
 
         $ingredient->delete();
 

@@ -7,6 +7,7 @@ use App\Enums\Enums\RecipeStatus;
 use App\Models\Backend\Cuisine;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Recipe extends Model
 {
@@ -31,14 +32,34 @@ class Recipe extends Model
         return $this->belongsTo(Cuisine::class);
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'recipe_category_pivot');
+    }
+
     public function ingredients()
     {
-        return $this->belongsToMany(Ingredient::class);
+        return $this->hasMany(Ingredient::class);
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (! $model->getKey()) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+            if (empty($model->slug)) {
+                $model->slug = Str::slug($model->title);
+            }
+        });
+
     }
 
 }

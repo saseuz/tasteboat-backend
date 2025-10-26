@@ -2,22 +2,21 @@
 
 namespace App\Models\Backend;
 
-use App\Models\Backend\Recipe;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Cuisine extends Model
+class Ingredient extends Model
 {
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name', 'description'
+        'name', 'quantity', 'unit', 'note', 'recipe_id'
     ];
 
-    public function recipes()
+    public function recipe()
     {
-        return $this->hasMany(Recipe::class);
+        return $this->hasOne(Recipe::class);
     }
 
     protected static function boot()

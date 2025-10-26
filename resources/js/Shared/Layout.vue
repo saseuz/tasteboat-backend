@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import config from '@/helpers/config';
-import { Bell, LayoutDashboard, PanelsTopLeft, Users } from 'lucide-vue-next';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle } from "lucide-vue-next"
+import { Bell, PanelsTopLeft } from 'lucide-vue-next';
 import Sidebar from '@/Shared/Sidebar.vue';
+import { Toaster } from '@/components/ui/sonner'
+import 'vue-sonner/style.css'
+import { toast } from 'vue-sonner'
 
 const page = usePage();
 
@@ -20,6 +21,22 @@ const flashSuccess = computed(() =>
 const flashError = computed(() =>
     page.props.flash?.error
 )
+
+watch(flashSuccess, (value) => {
+    if (value) {
+        toast.success("Success!", {
+            description: value
+        });
+    }
+});
+
+watch(flashError, (value) => {
+    if (value) {
+        toast.error("Something Went Wrong!", {
+            description: value
+        });
+    }
+});
 </script>
 
 <template>
@@ -58,23 +75,7 @@ const flashError = computed(() =>
 
                 
                 <main class="flex-grow p-6 bg-[#0b141e]">
-                    <div class="flex mb-4" v-if="flashSuccess">
-                        <Alert>
-                            <AlertTitle>Success!</AlertTitle>
-                            <AlertDescription>
-                            {{  flashSuccess }}
-                            </AlertDescription>
-                        </Alert>
-                    </div>
-                    <div class="flex mb-4" v-if="flashError">
-                        <Alert variant="destructive">
-                            <AlertCircle class="w-4 h-4" />
-                            <AlertTitle>Error!</AlertTitle>
-                            <AlertDescription>
-                            {{  flashError }}
-                            </AlertDescription>
-                        </Alert>
-                    </div>
+                    <Toaster />
 
                     <slot />
                 </main>

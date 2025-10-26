@@ -1,5 +1,5 @@
 <script setup>
-import { LayoutDashboard, Users, Gavel, User, Earth } from 'lucide-vue-next';
+import { LayoutDashboard, Users, Gavel, User, Earth, ShoppingBasket } from 'lucide-vue-next';
 import config from '@/helpers/config'
 
 </script>
@@ -64,6 +64,18 @@ import config from '@/helpers/config'
                 >
                 <Earth class="size-5" />
                 Cuisine
+            </Link>
+        </li>
+        <li v-if="$can('view-ingredient')">
+            <Link 
+                :href="route(config.admin_route_name + 'ingredients.index')"
+                :class="[
+                    'sidebar_link',
+                    route().current(config.admin_route_name + 'ingredients.index') ? 'active': ''
+                ]"
+                >
+                <ShoppingBasket class="size-5" />
+                Ingredient
             </Link>
         </li>
     </ul>

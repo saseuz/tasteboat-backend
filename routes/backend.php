@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\CuisineController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\IngredientController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 
@@ -35,6 +36,7 @@ Route::group([
         Route::post('users/{user}/update-status', [UserController::class, 'updateStatus'])->name('users.update-status');
 
         Route::resource('cuisines', CuisineController::class);
+        Route::resource('ingredients', IngredientController ::class);
     });
 
     // Route::get('site-settings', [DashboardController::class, 'settings'])->name('site-settings');

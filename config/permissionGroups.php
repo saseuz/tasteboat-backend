@@ -36,4 +36,22 @@ return [
             'delete-user',
         ]
     ],
+    [
+        'name' => 'Cuisine Management',
+        'permissions' => [
+            'view-cuisine',
+            'create-cuisine',
+            'update-cuisine',
+            'delete-cuisine',
+        ]
+    ],
+    [
+        'name' => 'Ingredient Management',
+        'permissions' => [
+            'view-ingredient',
+            'create-ingredient',
+            'update-ingredient',
+            'delete-ingredient',
+        ]
+    ],
 ];

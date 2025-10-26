@@ -52,11 +52,11 @@ class CuisineController extends Controller
      */
     public function show(string $id)
     {
-        $cuisine = Cuisine::findOrFail($id);
+        // $cuisine = Cuisine::findOrFail($id);
 
-        return Inertia::render('Cuisine/Show', [
-            'cuisine' => $cuisine,
-        ]);
+        // return Inertia::render('Cuisine/Show', [
+        //     'cuisine' => $cuisine,
+        // ]);
     }
 
     /**
@@ -88,7 +88,7 @@ class CuisineController extends Controller
         ]);
 
         return redirect()->route(admin_route_name() . 'cuisines.index')
-            ->with('success', 'cuisine updated successfully.');
+            ->with('success', 'Cuisine updated successfully.');
     }
 
     /**

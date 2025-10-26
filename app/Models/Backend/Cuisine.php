@@ -3,11 +3,15 @@
 namespace App\Models\Backend;
 
 use App\Models\Backend\Recipe;
+use Database\Factories\CuisineFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Cuisine extends Model
 {
+    use HasFactory;
+
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -29,5 +33,10 @@ class Cuisine extends Model
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });
+    }
+
+    protected static function newFactory()
+    {
+        return CuisineFactory::new();
     }
 }

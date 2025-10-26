@@ -2,11 +2,15 @@
 
 namespace App\Models\Backend;
 
+use Database\Factories\IngredientFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Ingredient extends Model
 {
+    use HasFactory;
+
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -17,6 +21,11 @@ class Ingredient extends Model
     public function recipe()
     {
         return $this->belongsTo(Recipe::class);
+    }
+
+    protected static function newFactory()
+    {
+        return IngredientFactory::new();
     }
 
     protected static function boot()

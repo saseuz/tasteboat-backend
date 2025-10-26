@@ -3,10 +3,14 @@
 namespace App\Models\Backend;
 
 use App\Models\User;
+use Database\Factories\RatingFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Rating extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'recipe_id',
         'user_id',
@@ -21,5 +25,10 @@ class Rating extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected static function newFactory()
+    {
+        return RatingFactory::new();
     }
 }

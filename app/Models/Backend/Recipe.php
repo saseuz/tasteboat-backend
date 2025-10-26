@@ -6,11 +6,15 @@ use App\Enums\Enums\RecipeDifficulty;
 use App\Enums\Enums\RecipeStatus;
 use App\Models\Backend\Cuisine;
 use App\Models\User;
+use Database\Factories\RecipeFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Recipe extends Model
 {
+    use HasFactory;
+    
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -18,14 +22,6 @@ class Recipe extends Model
         'title', 'slug', 'description', 'instructrions', 'prep_time', 'cook_time',
         'servings', 'difficulty', 'thumbnail', 'status', 'cuisine_id'
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'difficulty' => RecipeDifficulty::class,
-            'status' => RecipeStatus::class,
-        ];
-    }
 
     public function cuisine()
     {
@@ -45,6 +41,19 @@ class Recipe extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected static function newFactory()
+    {
+        return RecipeFactory::new();
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'difficulty' => RecipeDifficulty::class,
+            'status' => RecipeStatus::class,
+        ];
     }
 
     protected static function boot()

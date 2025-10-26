@@ -2,11 +2,15 @@
 
 namespace App\Models\Backend;
 
+use Database\Factories\CategoryFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Category extends Model
 {
+    use HasFactory;
+
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -32,5 +36,10 @@ class Category extends Model
             }
         });
 
+    }
+
+    protected static function newFactory()
+    {
+        return CategoryFactory::new();
     }
 }

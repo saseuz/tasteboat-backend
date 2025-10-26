@@ -3,10 +3,14 @@
 namespace App\Models\Backend;
 
 use App\Models\User;
+use Database\Factories\CommentFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'recipe_id', 'user_id', 'parent_id', 'content',
     ];
@@ -29,5 +33,10 @@ class Comment extends Model
     public function replies()
     {
         return $this->hasMany(Comment::class, 'parent_id')->with('replies');
+    }
+
+    protected static function newFactory()
+    {
+        return CommentFactory::new();
     }
 }

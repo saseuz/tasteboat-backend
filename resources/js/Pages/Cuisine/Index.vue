@@ -13,6 +13,7 @@ import { Plus } from 'lucide-vue-next';
 import { useForm } from '@inertiajs/vue3';
 import BreadcrumbT from '@/Shared/BreadcrumbT.vue';
 import DeleteDialog from '@/Shared/DeleteDialog.vue';
+import PaginationT from '@/Shared/PaginationT.vue';
 
 let props = defineProps({
     cuisines: Object,
@@ -50,49 +51,53 @@ let form = useForm({
                 <Plus /> Create
             </Link>
         </div>
-        <Table class="bg-[#243447] rounded" v-if="$can('view-cuisine')">
-            <TableCaption>A list of your recent cuisines.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                    <TableHead class="w-[100px]">
-                    ID
-                    </TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead class="text-right">
-                    Action
-                    </TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                <TableRow v-for="cuisine in cuisines.data" :key="cuisine.id">
-                    <TableCell class="font-medium">
-                    {{ cuisine.id}}
-                    </TableCell>
-                    <TableCell>{{ cuisine.name  }}</TableCell>
-                    <TableCell class="text-right space-x-2">
-                        <!-- <Link
-                            v-if="$can('view-cuisine')"
-                            :href="route(config.admin_route_name + 'cuisines.show', cuisine.id)"
-                            class="text-blue-400 hover:underline"
-                        >
-                            Show
-                        </Link> -->
-                        <Link
-                            v-if="$can('update-cuisine')"
-                            :href="route(config.admin_route_name + 'cuisines.edit', cuisine.id)"
-                            class="text-blue-600 hover:underline"
-                        >
-                            Edit
-                        </Link>
-                        <DeleteDialog 
-                            :data="form.deleteDialog" 
-                            :route="route(config.admin_route_name + 'cuisines.destroy', cuisine.id)"
-                            v-if="$can('delete-cuisine')"
-                         />
-                    </TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
+        <div v-if="$can('view-cuisine')">
+            <Table class="bg-[#243447] rounded">
+                <TableCaption>A list of your recent cuisines.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead class="w-[100px]">
+                        ID
+                        </TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead class="text-right">
+                        Action
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow v-for="cuisine in cuisines.data" :key="cuisine.id">
+                        <TableCell class="font-medium">
+                        {{ cuisine.id}}
+                        </TableCell>
+                        <TableCell>{{ cuisine.name  }}</TableCell>
+                        <TableCell class="text-right space-x-2">
+                            <!-- <Link
+                                v-if="$can('view-cuisine')"
+                                :href="route(config.admin_route_name + 'cuisines.show', cuisine.id)"
+                                class="text-blue-400 hover:underline"
+                            >
+                                Show
+                            </Link> -->
+                            <Link
+                                v-if="$can('update-cuisine')"
+                                :href="route(config.admin_route_name + 'cuisines.edit', cuisine.id)"
+                                class="text-blue-600 hover:underline"
+                            >
+                                Edit
+                            </Link>
+                            <DeleteDialog 
+                                :data="form.deleteDialog" 
+                                :route="route(config.admin_route_name + 'cuisines.destroy', cuisine.id)"
+                                v-if="$can('delete-cuisine')"
+                            />
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+
+            <PaginationT :links="cuisines.links"  />
+        </div>
         <div class="mb-4" v-else>
             You don't have permission to view list.
         </div>

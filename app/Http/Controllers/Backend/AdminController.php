@@ -24,7 +24,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $admins = Admin::with('roles')->orderBy('created_at', 'asc')->paginate(10);
+        $admins = Admin::with('roles')->orderBy('created_at', 'desc')->paginate();
         return Inertia::render('Admin/Index', [
             'admins' => $admins
         ]);

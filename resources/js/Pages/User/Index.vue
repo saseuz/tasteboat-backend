@@ -13,6 +13,7 @@ import { Plus } from 'lucide-vue-next';
 import BreadcrumbT from '@/Shared/BreadcrumbT.vue';
 import { useForm } from '@inertiajs/vue3';
 import DeleteDialog from '@/Shared/DeleteDialog.vue';
+import PaginationT from '@/Shared/PaginationT.vue';
 
 let props = defineProps({
     users: Object,
@@ -51,52 +52,56 @@ let form = useForm({
                 <Plus /> Create
             </Link>
         </div> -->
-        <Table class="bg-[#243447] rounded" v-if="$can('view-user')">
-            <TableCaption>A list of your recent users.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                    <TableHead class="w-[100px]">
-                    ID
-                    </TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead class="text-right">
-                    Action
-                    </TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                <TableRow v-for="user in users.data" :key="user.id">
-                    <TableCell class="font-medium">
-                    {{ user.id}}
-                    </TableCell>
-                    <TableCell>{{ user.name  }}</TableCell>
-                    <TableCell>{{ user.email }}</TableCell>
-                    <TableCell>
-                        <span 
-                            class="inline-block text-xs uppercase px-2 rounded-full mr-1"
-                            :class="user.status == 'active' ? 'bg-blue-200 text-blue-800' : 'bg-red-200 text-red-800'"
-                        >
-                            {{ user.status }}
-                        </span>
-                    </TableCell>
-                    <TableCell class="text-right space-x-2">
-                        <Link
-                            v-if="$can('update-user')"
-                            :href="route(config.admin_route_name + 'users.show', user.id)"
-                            class="text-blue-400 hover:underline"
-                        >
-                            Show
-                        </Link>
-                        <DeleteDialog 
-                            v-if="$can('delete-user')"
-                            :data="form.deleteDialog" 
-                            :route="route(config.admin_route_name + 'users.destroy', user.id)" />
-                    </TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
+        <div v-if="$can('view-user')">
+            <Table class="bg-[#243447] rounded">
+                <TableCaption>A list of your recent users.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead class="w-[100px]">
+                        ID
+                        </TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead class="text-right">
+                        Action
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow v-for="user in users.data" :key="user.id">
+                        <TableCell class="font-medium">
+                        {{ user.id}}
+                        </TableCell>
+                        <TableCell>{{ user.name  }}</TableCell>
+                        <TableCell>{{ user.email }}</TableCell>
+                        <TableCell>
+                            <span 
+                                class="inline-block text-xs uppercase px-2 rounded-full mr-1"
+                                :class="user.status == 'active' ? 'bg-blue-200 text-blue-800' : 'bg-red-200 text-red-800'"
+                            >
+                                {{ user.status }}
+                            </span>
+                        </TableCell>
+                        <TableCell class="text-right space-x-2">
+                            <Link
+                                v-if="$can('update-user')"
+                                :href="route(config.admin_route_name + 'users.show', user.id)"
+                                class="text-blue-400 hover:underline"
+                            >
+                                Show
+                            </Link>
+                            <DeleteDialog 
+                                v-if="$can('delete-user')"
+                                :data="form.deleteDialog" 
+                                :route="route(config.admin_route_name + 'users.destroy', user.id)" />
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+
+            <PaginationT :links="users.links" />
+        </div>
         <div class="mb-4" v-else>
             You don't have permission to view list.
         </div>

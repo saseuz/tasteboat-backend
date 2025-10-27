@@ -13,6 +13,7 @@ import { Plus } from 'lucide-vue-next';
 import { useForm } from '@inertiajs/vue3';
 import BreadcrumbT from '@/Shared/BreadcrumbT.vue';
 import DeleteDialog from '@/Shared/DeleteDialog.vue';
+import PaginationT from '@/Shared/PaginationT.vue';
 
 let props = defineProps({
     ingredients: Object,
@@ -50,51 +51,56 @@ let form = useForm({
                 <Plus /> Create
             </Link>
         </div>
-        <Table class="bg-[#243447] rounded" v-if="$can('view-ingredient')">
-            <TableCaption>A list of your recent ingredients.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                    <TableHead class="w-[100px]">
-                    ID
-                    </TableHead>
-                    <TableHead>Recipe</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead class="text-right">
-                    Action
-                    </TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                <TableRow v-for="ingredient in ingredients.data" :key="ingredient.id">
-                    <TableCell class="font-medium">
-                    {{ ingredient.id}}
-                    </TableCell>
-                    <TableCell>{{ ingredient.recipe.title  }}</TableCell>
-                    <TableCell>{{ ingredient.name  }}</TableCell>
-                    <TableCell class="text-right space-x-2">
-                        <!-- <Link
-                            v-if="$can('view-ingredient')"
-                            :href="route(config.admin_route_name + 'ingredients.show', ingredient.id)"
-                            class="text-blue-400 hover:underline"
-                        >
-                            Show
-                        </Link> -->
-                        <Link
-                            v-if="$can('update-ingredient')"
-                            :href="route(config.admin_route_name + 'ingredients.edit', ingredient.id)"
-                            class="text-blue-600 hover:underline"
-                        >
-                            Edit
-                        </Link>
-                        <DeleteDialog 
-                            :data="form.deleteDialog" 
-                            :route="route(config.admin_route_name + 'ingredients.destroy', ingredient.id)"
-                            v-if="$can('delete-ingredient')"
-                         />
-                    </TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
+
+        <div v-if="$can('view-ingredient')">
+            <Table class="bg-[#243447] rounded">
+                <TableCaption>A list of your recent ingredients.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead class="w-[100px]">
+                        ID
+                        </TableHead>
+                        <TableHead>Recipe</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead class="text-right">
+                        Action
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow v-for="ingredient in ingredients.data" :key="ingredient.id">
+                        <TableCell class="font-medium">
+                        {{ ingredient.id}}
+                        </TableCell>
+                        <TableCell>{{ ingredient.recipe.title  }}</TableCell>
+                        <TableCell>{{ ingredient.name  }}</TableCell>
+                        <TableCell class="text-right space-x-2">
+                            <!-- <Link
+                                v-if="$can('view-ingredient')"
+                                :href="route(config.admin_route_name + 'ingredients.show', ingredient.id)"
+                                class="text-blue-400 hover:underline"
+                            >
+                                Show
+                            </Link> -->
+                            <Link
+                                v-if="$can('update-ingredient')"
+                                :href="route(config.admin_route_name + 'ingredients.edit', ingredient.id)"
+                                class="text-blue-600 hover:underline"
+                            >
+                                Edit
+                            </Link>
+                            <DeleteDialog 
+                                :data="form.deleteDialog" 
+                                :route="route(config.admin_route_name + 'ingredients.destroy', ingredient.id)"
+                                v-if="$can('delete-ingredient')"
+                            />
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+
+            <PaginationT :links="ingredients.links" />
+        </div>
         <div class="mb-4" v-else>
             You don't have permission to view list.
         </div>

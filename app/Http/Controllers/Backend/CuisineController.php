@@ -14,7 +14,7 @@ class CuisineController extends Controller
      */
     public function index()
     {
-        $cuisines = Cuisine::orderBy('created_at', 'asc')->paginate(10);
+        $cuisines = Cuisine::orderBy('created_at', 'desc')->paginate();
 
         return Inertia::render('Cuisine/Index', [
             'cuisines' => $cuisines

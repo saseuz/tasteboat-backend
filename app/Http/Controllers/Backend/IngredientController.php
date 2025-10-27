@@ -17,7 +17,7 @@ class IngredientController extends Controller
     {
         $ingredients = Ingredient::with('recipe')
                         ->orderBy('created_at', 'desc')
-                        ->paginate(10);
+                        ->paginate();
 
         return Inertia::render('Ingredient/Index', [
             'ingredients' => $ingredients

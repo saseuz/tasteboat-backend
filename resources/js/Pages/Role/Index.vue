@@ -13,6 +13,7 @@ import { Plus } from 'lucide-vue-next';
 import { useForm } from '@inertiajs/vue3';
 import BreadcrumbT from '@/Shared/BreadcrumbT.vue';
 import DeleteDialog from '@/Shared/DeleteDialog.vue';
+import PaginationT from '@/Shared/PaginationT.vue';
 
 let props = defineProps({
     roles: Object,
@@ -50,49 +51,53 @@ let form = useForm({
                 <Plus /> Create
             </Link>
         </div>
-        <Table class="bg-[#243447] rounded" v-if="$can('view-role')">
-            <TableCaption>A list of your recent roles.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                    <TableHead class="w-[100px]">
-                    ID
-                    </TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead class="text-right">
-                    Action
-                    </TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                <TableRow v-for="role in roles.data" :key="role.id">
-                    <TableCell class="font-medium">
-                    {{ role.id}}
-                    </TableCell>
-                    <TableCell>{{ role.name  }}</TableCell>
-                    <TableCell class="text-right space-x-2">
-                        <Link
-                            v-if="$can('assign-permissions')"
-                            :href="route(config.admin_route_name + 'roles.show', role.id)"
-                            class="text-blue-400 hover:underline"
-                        >
-                            Show
-                        </Link>
-                        <Link
-                            v-if="$can('update-role')"
-                            :href="route(config.admin_route_name + 'roles.edit', role.id)"
-                            class="text-blue-600 hover:underline"
-                        >
-                            Edit
-                        </Link>
-                        <DeleteDialog 
-                            :data="form.deleteDialog" 
-                            :route="route(config.admin_route_name + 'roles.destroy', role.id)"
-                            v-if="$can('delete-role')"
-                         />
-                    </TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
+        <div v-if="$can('view-role')">       
+            <Table class="bg-[#243447] rounded">
+                <TableCaption>A list of your recent roles.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead class="w-[100px]">
+                        ID
+                        </TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead class="text-right">
+                        Action
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow v-for="role in roles.data" :key="role.id">
+                        <TableCell class="font-medium">
+                        {{ role.id}}
+                        </TableCell>
+                        <TableCell>{{ role.name  }}</TableCell>
+                        <TableCell class="text-right space-x-2">
+                            <Link
+                                v-if="$can('assign-permissions')"
+                                :href="route(config.admin_route_name + 'roles.show', role.id)"
+                                class="text-blue-400 hover:underline"
+                            >
+                                Show
+                            </Link>
+                            <Link
+                                v-if="$can('update-role')"
+                                :href="route(config.admin_route_name + 'roles.edit', role.id)"
+                                class="text-blue-600 hover:underline"
+                            >
+                                Edit
+                            </Link>
+                            <DeleteDialog 
+                                :data="form.deleteDialog" 
+                                :route="route(config.admin_route_name + 'roles.destroy', role.id)"
+                                v-if="$can('delete-role')"
+                            />
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+
+            <PaginationT :links="roles.links" />
+        </div>
         <div class="mb-4" v-else>
             You don't have permission to view list.
         </div>

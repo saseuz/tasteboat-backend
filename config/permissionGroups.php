@@ -55,6 +55,14 @@ return [
         ]
     ],
     [
+        'name' => 'Recipe Management',
+        'permissions' => [
+            'view-recipe',
+            'update-recipe',
+            'delete-recipe',
+        ]
+    ],
+    [
         'name' => 'Ingredient Management',
         'permissions' => [
             'view-ingredient',

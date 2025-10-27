@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             // DefaultAdminSeeder::class,
-            // PermissionSeeder::class,
+            PermissionSeeder::class,
             // FactorySeeder::class,
         ]);
         

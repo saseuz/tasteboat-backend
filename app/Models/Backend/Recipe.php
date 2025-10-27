@@ -43,6 +43,16 @@ class Recipe extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function avergeRatings()
+    {
+        return (int) $this->ratings()->avg('rating');
+    }
+
     protected static function newFactory()
     {
         return RecipeFactory::new();

@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\CuisineController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\IngredientController;
+use App\Http\Controllers\Backend\RecipeController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 
@@ -39,6 +40,9 @@ Route::group([
         Route::resource('cuisines', CuisineController::class);
         Route::resource('categories', CategoryController ::class);
         Route::resource('ingredients', IngredientController ::class);
+
+        Route::get('recipes', [RecipeController::class, 'index'])->name('recipes.index');
+        Route::get('recipes/{id}', [RecipeController::class, 'show'])->name('recipes.show');
     });
 
     // Route::get('site-settings', [DashboardController::class, 'settings'])->name('site-settings');

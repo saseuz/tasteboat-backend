@@ -62,15 +62,15 @@ const changeStatus = () => {
 
             <AlertDialog>
                 <AlertDialogTrigger 
-                    class="mt-2 py-1 px-2 font-semibold rounded cursor-pointer transition shadow"
-                    :class="user.status == 'active' ? 'bg-red-400 hover:bg-red-400/80' : 'bg-green-400 hover:bg-green-400/80'">
-                    Click to {{ user.status == 'active' ? 'deactivate' : 'activate'  }}
+                    class="focus:outline-none text-white focus:ring-4 font-medium rounded text-sm px-5 py-2.5 mr-2 mb-2"
+                    :class="user.status == 'active' ? 'bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 focus:ring-red-300 dark:focus:ring-red-900' : 'bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700 focus:ring-green-300 dark:focus:ring-green-900'">
+                    Click to {{ user.status == 'active' ? 'Deactivate' : 'Activate'  }}
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            You want to {{ user.status == 'active' ? 'deactivate' : 'activate'  }} this account?
+                            You want to {{ user.status == 'active' ? 'Deactivate' : 'Activate'  }} this account?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

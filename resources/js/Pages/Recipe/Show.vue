@@ -61,6 +61,7 @@ let toggleTrashed = () => {
             <div class="flex justify-between mb-5">
                 <div class="flex gap-2">
                     <button 
+                        v-if="$can('update-recipe')"
                         class="focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
                         :class="recipe.status === 'published' ? 'bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 focus:ring-red-300 dark:focus:ring-red-900' : 'bg-cyan-700 hover:bg-cyan-800 dark:bg-cyan-600 dark:hover:bg-cyan-700 focus:ring-cyan-300 dark:focus:ring-cyan-900'"
                         @click="toggleStatus()"
@@ -69,6 +70,7 @@ let toggleTrashed = () => {
                         {{ recipe.status === 'draft' ? 'Make Publish' : 'Make Draft' }}
                     </button>
                     <button 
+                        v-if="$can('update-recipe')"
                         class="focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
                         :class="recipe.deleted_at === null ? 'bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 focus:ring-red-300 dark:focus:ring-red-900' : 'bg-cyan-700 hover:bg-cyan-800 dark:bg-cyan-600 dark:hover:bg-cyan-700 focus:ring-cyan-300 dark:focus:ring-cyan-900'"
                         @click="toggleTrashed()"

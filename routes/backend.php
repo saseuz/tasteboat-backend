@@ -43,6 +43,7 @@ Route::group([
 
         Route::get('recipes', [RecipeController::class, 'index'])->name('recipes.index');
         Route::get('recipes/{id}', [RecipeController::class, 'show'])->name('recipes.show');
+        Route::post('recipes/{id}/toggle-status', [RecipeController::class, 'toggleStatus'])->name('recipes.toggleStatus');
     });
 
     // Route::get('site-settings', [DashboardController::class, 'settings'])->name('site-settings');

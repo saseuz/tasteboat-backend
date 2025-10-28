@@ -69,6 +69,7 @@ const goToPage = (page) => {
                         </TableHead>
                         <TableHead>Title</TableHead>
                         <TableHead>User</TableHead>
+                        <TableHead>Status</TableHead>
                         <TableHead class="text-right">
                         Action
                         </TableHead>
@@ -81,6 +82,14 @@ const goToPage = (page) => {
                         </TableCell>
                         <TableCell>{{ recipe.title  }}</TableCell>
                         <TableCell>{{ recipe.user.name  }}</TableCell>
+                        <TableCell>
+                            <span 
+                                class="inline-block text-xs px-2 rounded-full mr-1"
+                                :class="recipe.status === 'published' ? 'bg-blue-200 text-blue-800' : 'bg-red-200 text-red-800'"
+                            >
+                            {{ recipe.status }}
+                            </span>
+                        </TableCell>
                         <TableCell class="text-right space-x-2">
                             <Link
                                 v-if="$can('view-recipe')"

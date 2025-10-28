@@ -53,6 +53,16 @@ class Recipe extends Model
         return (int) $this->ratings()->avg('rating');
     }
 
+    public function favourites()
+    {
+        return $this->hasMany(Favourite::class);
+    }
+
+    public function favouriteCount()
+    {
+        return $this->favourites->count();
+    }
+
     protected static function newFactory()
     {
         return RecipeFactory::new();

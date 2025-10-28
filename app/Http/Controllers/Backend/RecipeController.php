@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Enums\Enums\RecipeStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Backend\Comment;
 use App\Models\Backend\Recipe;
@@ -35,6 +36,26 @@ class RecipeController extends Controller
             'c_count' => $recipe->categories->count(),
             'comments' => $comments,
             'ingredients' => $recipe->ingredients,
+            'favourite_count' => $recipe->favouriteCount(),
         ]);
+    }
+
+    public function toggleStatus(Request $request, string $id)
+    {
+        $recipe = Recipe::findOrFail($id);
+        $status = $request->status;
+
+        if ($status === RecipeStatus::DRAFT->value) {
+            $status = RecipeStatus::PUBLISHED->value;
+        } else {
+            $status = RecipeStatus::DRAFT->value;
+        }
+        
+        $recipe->update([
+            'status' => $status
+        ]);
+
+        return redirect()->route(admin_route_name() . 'recipes.index')
+            ->with('success', $recipe->title . ' status updated successfully.');
     }
 }

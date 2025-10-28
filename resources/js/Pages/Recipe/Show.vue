@@ -4,7 +4,7 @@ import config from '@/helpers/config'
 import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/vue3';
 import BreadcrumbT from '@/Shared/BreadcrumbT.vue';
-import { Boxes, CalendarClock, CalendarDays, ChartColumnIncreasingIcon, ClockFading, Earth, Star, User, Users } from 'lucide-vue-next';
+import { Boxes, CalendarClock, CalendarDays, ChartColumnIncreasingIcon, ClockFading, Earth, Heart, Star, User, Users } from 'lucide-vue-next';
 import CommentItem from './Shared/CommentItem.vue';
 import CommentsList from './Shared/CommentsList.vue';
 
@@ -15,14 +15,24 @@ let props = defineProps({
     c_count: Number,
     comments: Object,
     ingredients: Object,
+    favourite_count: Number,
 });
 
 let form = useForm({
+    status: props.recipe.status,
     breadscrumbs: [
         { label: 'Recipe', url: route(config.admin_route_name + 'recipes.index') },
         { label: 'Details' },
     ],
 });
+
+let toggleStatus = () => {
+    form.post(route(config.admin_route_name + 'recipes.toggleStatus', props.recipe.id), {
+        onSuccess: () => {
+            form.reset();
+        },
+    });
+}
 
 </script>
 
@@ -40,29 +50,53 @@ let form = useForm({
     <div class="mt-4 bg-secondary p-4 rounded shadow text-primary">
         <div class="w-full max-w-full bg-gray-800 rounded shadow p-4" v-if="$can('view-recipe')">
             <!-- Created At/User -->
-            <div class="flex flex-col items-end mb-2">
-                <div class="flex space-x-1 text-sm">
-                    <CalendarDays class="size-4 text-lime-500" /> 
-                    <span>{{ recipe.created_at }}</span>
+            <div class="flex justify-between mb-5">
+                <div class="flex gap-2">
+                    <button 
+                        class="focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                        :class="recipe.status === 'published' ? 'bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 focus:ring-red-300 dark:focus:ring-red-900' : 'bg-cyan-700 hover:bg-cyan-800 dark:bg-cyan-600 dark:hover:bg-cyan-700 focus:ring-cyan-300 dark:focus:ring-cyan-900'"
+                        @click="toggleStatus(recipe.status)"
+                    >
+                        {{ recipe.status === 'draft' ? 'Make Publish' : 'Make Draft' }}
+                    </button>
+                    <button 
+                        class="focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                        :class="recipe.status === 'published' ? 'bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 focus:ring-red-300 dark:focus:ring-red-900' : 'bg-cyan-700 hover:bg-cyan-800 dark:bg-cyan-600 dark:hover:bg-cyan-700 focus:ring-cyan-300 dark:focus:ring-cyan-900'"
+                    >
+                        {{ recipe.status === 'draft' ? 'Move to Trash' : 'Remove from Trash' }}
+                    </button>
                 </div>
-                <div class="flex space-x-1 text-sm">
-                    <User class="size-4 text-red-500" />
-                    <span>{{ recipe.user.name }}</span>
+                <div class="flex flex-col mb-2">
+                    <div class="flex space-x-1 text-sm">
+                        <CalendarDays class="size-4 text-lime-500" /> 
+                        <span>{{ recipe.created_at }}</span>
+                    </div>
+                    <div class="flex space-x-1 text-sm">
+                        <User class="size-4 text-red-500" />
+                        <span>{{ recipe.user.name }}</span>
+                    </div>
                 </div>
             </div>
 
             <div class="grid xs:grid-cols-1 grid-cols-3 gap-4">
 
                 <!-- Image -->
-                <div class="">
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto, fuga ab ipsam nesciunt ut id explicabo! Corporis excepturi vitae, voluptate, ipsa doloremque officia natus distinctio quae, earum quam alias quaerat. oluptate, ipsa doloremque officia natus distinctio quae, earum quam alias quaerat.</p>
+                <div class="xs:col-span-3">
+                    <div class="bg-slate-900 max-w-full h-auto">
+                        <img class="max-w-full h-auto" :src="recipe.thumbnail" :alt="recipe.title">
+                    </div>
                 </div>
 
-                <div class="col-span-2">
+                <div class="xs:col-span-3 col-span-2">
                     <!-- Title/Status -->
                     <h4 class="text-2xl font-bold dark:text-white mb-2">
                         {{ recipe.title }} 
-                        <small class="ml-2 px-1 py-0.5 rounded bg-blue-500/40 text-blue-200">{{ recipe.status  }}</small>
+                        <small 
+                            class="ml-2 px-1 py-0.5 rounded bg-blue-500/40 text-blue-200"
+                            :class="recipe.status === 'published' ? 'bg-blue-500/40 text-blue-200' : 'bg-red-500/40 text-red-200'"
+                            >
+                            {{ recipe.status  }}
+                        </small>
                     </h4>
     
                     <!-- Cusine/Category/Ratings -->
@@ -82,6 +116,10 @@ let form = useForm({
                                 {{ category }} <span v-if="index < categories.length - 1">|</span>
                                 </span>
                                 <span v-if="c_count > categories.length">...</span>
+                            </div>
+                            <div class="flex space-x-1 text-sm">
+                                <Heart class="size-4 text-red-500" />
+                                <span class="font-semibold">{{ favourite_count }}</span>
                             </div>
                         </div>
                         <div class="flex space-x-1 text-sm px-3 py-1 rounded bg-amber-500/40 text-amber-400">
@@ -116,7 +154,7 @@ let form = useForm({
                 </div>
 
                 <!-- Ingredients -->
-                <div class="flex flex-col space-y-2">
+                <div class="xs:col-span-3 flex flex-col space-y-2">
                     <h5 class="border-b-2 border-slate-400 border-dashed dark:text-white font-bold py-1 text-xl mb-2">Ingredients</h5>
                     <section class="border border-amber-50 p-2 rounded-lg" v-for="(ingredient, index) in ingredients" :key="index">
                         <ul class="">
@@ -128,7 +166,7 @@ let form = useForm({
                     </section>
                 </div>
 
-                <div class="col-span-2 space-y-5">
+                <div class="xs:col-span-3 col-span-2 space-y-5">
                     <!-- Description -->
                     <section>
                         <h5 class="border-b-2 border-slate-400 border-dashed dark:text-white font-bold py-1 text-xl mb-2">Description</h5>

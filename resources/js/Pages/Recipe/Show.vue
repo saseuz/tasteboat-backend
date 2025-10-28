@@ -34,6 +34,14 @@ let toggleStatus = () => {
     });
 }
 
+let toggleTrashed = () => {
+    form.post(route(config.admin_route_name + 'recipes.toggleTrashed', props.recipe.id), {
+        onSuccess: () => {
+            form.reset();
+        },
+    });
+}
+
 </script>
 
 <template>
@@ -55,15 +63,18 @@ let toggleStatus = () => {
                     <button 
                         class="focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
                         :class="recipe.status === 'published' ? 'bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 focus:ring-red-300 dark:focus:ring-red-900' : 'bg-cyan-700 hover:bg-cyan-800 dark:bg-cyan-600 dark:hover:bg-cyan-700 focus:ring-cyan-300 dark:focus:ring-cyan-900'"
-                        @click="toggleStatus(recipe.status)"
+                        @click="toggleStatus()"
+                        :disabled="form.processing"
                     >
                         {{ recipe.status === 'draft' ? 'Make Publish' : 'Make Draft' }}
                     </button>
                     <button 
                         class="focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-                        :class="recipe.status === 'published' ? 'bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 focus:ring-red-300 dark:focus:ring-red-900' : 'bg-cyan-700 hover:bg-cyan-800 dark:bg-cyan-600 dark:hover:bg-cyan-700 focus:ring-cyan-300 dark:focus:ring-cyan-900'"
+                        :class="recipe.deleted_at === null ? 'bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 focus:ring-red-300 dark:focus:ring-red-900' : 'bg-cyan-700 hover:bg-cyan-800 dark:bg-cyan-600 dark:hover:bg-cyan-700 focus:ring-cyan-300 dark:focus:ring-cyan-900'"
+                        @click="toggleTrashed()"
+                        :disabled="form.processing"
                     >
-                        {{ recipe.status === 'draft' ? 'Move to Trash' : 'Remove from Trash' }}
+                        {{ recipe.deleted_at === null ? 'Move to Trash' : 'Remove from Trash' }}
                     </button>
                 </div>
                 <div class="flex flex-col mb-2">
@@ -83,7 +94,7 @@ let toggleStatus = () => {
                 <!-- Image -->
                 <div class="xs:col-span-3">
                     <div class="bg-slate-900 max-w-full h-auto">
-                        <img class="max-w-full h-auto" :src="recipe.thumbnail" :alt="recipe.title">
+                        <img class="max-w-full h-auto bg-red-900" src="https://placehold.co/600x400" :alt="recipe.title">
                     </div>
                 </div>
 

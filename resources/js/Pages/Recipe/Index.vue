@@ -17,6 +17,7 @@ import PaginationT from '@/Shared/PaginationT.vue';
 
 let props = defineProps({
     recipes: Object,
+    filter: String,
 });
 
 let form = useForm({
@@ -29,11 +30,12 @@ let form = useForm({
     ],
 });
 
-const goToPage = (page) => {
-  if (page) {
-    // router.get(route('recipes.index', { page }), {}, { preserveScroll: true })
-    console.log('page: ',page);
-  }
+let filterForm = useForm({
+    filter: props.filter || 'list',
+})
+
+const filterIndex = () => {
+    filterForm.get(route(config.admin_route_name + 'recipes.index'));
 };
 
 </script>
@@ -50,15 +52,20 @@ const goToPage = (page) => {
     </div>
 
     <div class="mt-4 bg-secondary p-4 rounded shadow text-primary">
-        <div class="flex justify-end mb-4">
-            <!-- <Link 
-                v-if="$can('create-recipe')"
-                :href="route(config.admin_route_name + 'recipes.create')"
-                class="flex items-center gap-2 bg-[#2a3f5f] hover:bg-[#2a3f5f]/50 text-white font-semibold py-2 px-4 rounded shadow transition"
-            >
-                <Plus /> Create
-            </Link> -->
+        <div class="flex justify-start mb-4">
+            <form @change="filterIndex()">
+                <label for="filter" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a filter</label>
+                <select 
+                    id="filter" 
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    v-model="filterForm.filter"
+                >
+                    <option value="list">View List</option>
+                    <option value="trashed">View Trashed</option>
+                </select>
+            </form>
         </div>
+
         <div v-if="$can('view-recipe')">
             <Table class="bg-[#243447] rounded">
                 <TableCaption>A list of your recent recipes.</TableCaption>

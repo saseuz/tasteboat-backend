@@ -11,18 +11,25 @@ use Inertia\Inertia;
 
 class RecipeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $recipes = Recipe::with('user')->latest()->paginate();
+        $recipes = Recipe::with('user')
+                    ->when($request->filter == 'trashed', fn ($q) => $q->onlyTrashed())
+                    ->latest()
+                    ->paginate();
 
         return Inertia::render('Recipe/Index', [
-            'recipes' => $recipes
+            'recipes' => $recipes,
+            'filter' => $request->filter,
         ]);
     }
 
     public function show(string $id)
     {
-        $recipe = Recipe::with(['user', 'cuisine', 'categories'])->findOrFail($id);
+        $recipe = Recipe::with(['user', 'cuisine', 'categories'])
+                    ->withTrashed()
+                    ->findOrFail($id);
+
         $comments = Comment::where('recipe_id', $recipe->id)
                         ->whereNull('parent_id')
                         ->with(['user', 'replies.user'])
@@ -42,7 +49,7 @@ class RecipeController extends Controller
 
     public function toggleStatus(Request $request, string $id)
     {
-        $recipe = Recipe::findOrFail($id);
+        $recipe = Recipe::withTrashed()->findOrFail($id);
         $status = $request->status;
 
         if ($status === RecipeStatus::DRAFT->value) {
@@ -57,5 +64,21 @@ class RecipeController extends Controller
 
         return redirect()->route(admin_route_name() . 'recipes.index')
             ->with('success', $recipe->title . ' status updated successfully.');
+    }
+
+    public function toggleTrashed(string $id)
+    {
+        $recipe = Recipe::withTrashed()->findOrFail($id);
+
+        if ($recipe->deleted_at) {
+            $recipe->restore();
+            $message = ' has been restored.';
+        } else {
+            $recipe->delete();
+            $message = ' moved to trashed.';
+        }
+
+        return redirect()->route(admin_route_name() . 'recipes.index')
+            ->with('success', $recipe->title . $message);
     }
 }

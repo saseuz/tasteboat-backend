@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\ImageManager;
 
 class AdminController extends Controller
 {
@@ -53,11 +56,18 @@ class AdminController extends Controller
             'email' => 'required|email|unique:admins,email',
             'name' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
+            'profile' => 'nullable|image|max:2048',
+            'bio' => 'nullable|string',
             'role' => 'required',
         ]);
 
         $admin = Admin::create($validated);
         $admin->assignRole($validated['role']);
+
+        if ($request->hasFile('profile')) {
+            $profile = $this->_saveImage($request);
+            $admin->update(['profile' => $profile]);
+        }
 
         return redirect()->route(admin_route_name() . 'admins.index')
             ->with('success', 'Admin created successfully.');
@@ -97,6 +107,8 @@ class AdminController extends Controller
             'email' => 'required|email|unique:admins,email,' . $id,
             'name' => 'required|string|max:255',
             'role' => 'required',
+            'profile' => 'nullable|image',
+            'bio' => 'nullable|string',
         ];
 
         if ($request->filled('old_password')) {
@@ -119,6 +131,18 @@ class AdminController extends Controller
         
         if ($request->filled('old_password') && $hashChecked) {
             return back()->withErrors(['old_password' => 'The old password is incorrect.']);
+        }
+
+        if ($request->hasFile('profile')) {
+            if ($admin->profile) {
+                $oldImagePath = Storage::disk('public')->get('admins/' . $admin->profile);
+                if ($oldImagePath) {
+                    Storage::disk('public')->delete('admins/' . $admin->profile);
+                }
+            }
+            
+            $profile = $this->_saveImage($request);
+            $validated['profile'] = $profile;
         }
 
         $admin->update($validated);
@@ -147,9 +171,28 @@ class AdminController extends Controller
                 ->with('error', 'You cannot delete yourself. or same role as you.');
         }
 
+        if ($admin->profile) {
+            $oldImagePath = Storage::disk('public')->get('admins/' . $admin->profile);
+            if ($oldImagePath) {
+                Storage::disk('public')->delete('admins/' . $admin->profile);
+            }
+        }
+
         $admin->delete();
 
         return redirect()->route(admin_route_name() . 'admins.index')
             ->with('success', 'Admin deleted successfully.');
+    }
+
+    private function _saveImage($request)
+    {
+        $file = $request->file('profile');
+        $fileName = uniqid() . '_' . $file->getClientOriginalName();
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($file)
+            ->resize(600, 400)
+            ->save(storage_path('app/public/admins/' . $fileName));
+
+        return $fileName;
     }
 }

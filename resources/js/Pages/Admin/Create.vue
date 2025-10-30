@@ -17,6 +17,7 @@ let form = useForm({
     password_confirmation: '',
     name: '',
     role: '',
+    profile: null,
     breadscrumbs: [
         { label: 'Admin', url: route(config.admin_route_name + 'admins.index') },
         { label: 'Create' },
@@ -81,6 +82,20 @@ let submit = () => {
                     </Label>
                     <Input id="confirm_password" type="password" v-model="form.password_confirmation" required placeholder="Confirm Password" class="w-full shadow-xl" />
                     <span v-if="form.errors.password" class="text-red-600 text-sm font-medium">{{ form.errors.password }}</span>
+                </div>
+
+                <div class="space-y-2">
+                    <Label htmlFor="profile" class="text-sm font-medium">
+                        Image
+                    </Label>
+                    <Input 
+                        id="profile" 
+                        type="file" 
+                        @change="e => form.profile = e.target.files[0]"
+                        placeholder="Enter Profile Image" 
+                        class="w-full shadow-xl"
+                    />
+                    <span v-if="form.errors.profile" class="text-red-600 text-sm font-medium">{{ form.errors.profile }}</span>
                 </div>
 
                 <div class="space-y-2 md:col-span-1">

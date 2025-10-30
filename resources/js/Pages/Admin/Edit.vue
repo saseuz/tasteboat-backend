@@ -14,12 +14,14 @@ let props = defineProps({
 });
 
 let form = useForm({
-    email: props.admin.email,
+    email: props.admin.email || '',
     password: '',
     password_confirmation: '',
     old_password: '',
-    name: props.admin.name,
-    role: props.current_role,
+    name: props.admin.name || '',
+    role: props.current_role || '',
+    profile: null,
+    bio: props.admin.bio || '',
     breadscrumbs: [
         { label: 'Admin', url: route(config.admin_route_name + 'admins.index') },
         { label: 'Edit' },
@@ -27,7 +29,11 @@ let form = useForm({
 });
 
 let submit = () => {
-    form.put(route(config.admin_route_name + 'admins.update', props.admin.id), {
+    console.log('form', form);
+    form.transform((data) => ({
+        ...data,
+        _method: 'put',
+    })).post(route(config.admin_route_name + 'admins.update', props.admin.id), {
         onSuccess: () => {
             form.reset();
         },
@@ -86,6 +92,29 @@ let submit = () => {
                     <span v-if="form.errors.password" class="text-red-600 text-sm font-medium">{{ form.errors.password }}</span>
                 </div>
 
+                <div class="space-y-2">
+                    <Label htmlFor="profile" class="text-sm font-medium">
+                        Image
+                    </Label>
+                    <Input 
+                        id="profile" 
+                        type="file" 
+                        @change="e => form.profile = e.target.files[0]"  
+                        placeholder="Enter Profile Image" 
+                        class="w-full shadow-xl"
+                    />
+                    <span v-if="form.errors.profile" class="text-red-600 text-sm font-medium">{{ form.errors.profile }}</span>
+                    <img :src="props.admin.profile" :alt="props.admin.name" class="mt-2 w-20 h-20 object-cover" v-if="props.admin.profile" />
+                </div>
+
+                <div class="space-y-2">
+                    <Label htmlFor="confirm_password" class="text-sm font-medium">
+                        Confirm Password <span class="text-red-600">*</span>
+                    </Label>
+                    <Input id="confirm_password" type="password" v-model="form.password_confirmation" placeholder="Confirm Password" class="w-full shadow-xl" />
+                    <span v-if="form.errors.password" class="text-red-600 text-sm font-medium">{{ form.errors.password }}</span>
+                </div>
+
                 <div class="space-y-2 md:col-span-1">
                     <Label htmlFor="role" class="text-sm font-medium">
                         Role <span class="text-red-600">*</span>
@@ -99,14 +128,6 @@ let submit = () => {
                         </SelectContent>
                     </Select>
                     <span v-if="form.errors.role" class="text-red-600 text-sm font-medium">{{ form.errors.role }}</span>
-                </div>
-
-                <div class="space-y-2">
-                    <Label htmlFor="confirm_password" class="text-sm font-medium">
-                        Confirm Password <span class="text-red-600">*</span>
-                    </Label>
-                    <Input id="confirm_password" type="password" v-model="form.password_confirmation" placeholder="Confirm Password" class="w-full shadow-xl" />
-                    <span v-if="form.errors.password" class="text-red-600 text-sm font-medium">{{ form.errors.password }}</span>
                 </div>
 
             </div>

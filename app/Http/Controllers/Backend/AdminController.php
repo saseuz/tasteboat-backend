@@ -134,11 +134,10 @@ class AdminController extends Controller
         }
 
         if ($request->hasFile('profile')) {
-            if ($admin->profile) {
-                $oldImagePath = Storage::disk('public')->get('admins/' . $admin->profile);
-                if ($oldImagePath) {
-                    Storage::disk('public')->delete('admins/' . $admin->profile);
-                }
+            $oldProfile = $admin->getRawOriginal('profile');
+
+            if ($oldProfile && Storage::disk('public')->exists('admins/' . $oldProfile)) {
+                Storage::disk('public')->delete('admins/' . $oldProfile);
             }
             
             $profile = $this->_saveImage($request);
@@ -171,12 +170,10 @@ class AdminController extends Controller
                 ->with('error', 'You cannot delete yourself. or same role as you.');
         }
 
-        if ($admin->profile) {
-            $oldImagePath = Storage::disk('public')->get('admins/' . $admin->profile);
-            if ($oldImagePath) {
-                Storage::disk('public')->delete('admins/' . $admin->profile);
-            }
-        }
+        // $oldProfile = $admin->getRawOriginal('profile');
+        // if ($oldProfile && Storage::disk('public')->exists('admins/' . $oldProfile)) {
+        //     Storage::disk('public')->delete('admins/' . $oldProfile);
+        // }
 
         $admin->delete();
 
@@ -190,7 +187,7 @@ class AdminController extends Controller
         $fileName = uniqid() . '_' . $file->getClientOriginalName();
         $manager = new ImageManager(new Driver());
         $image = $manager->read($file)
-            ->resize(600, 400)
+            ->resize(600, 600)
             ->save(storage_path('app/public/admins/' . $fileName));
 
         return $fileName;

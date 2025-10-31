@@ -4,12 +4,25 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Traits\HasImageUpload;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     use HasImageUpload;
+
+    public function profile(): JsonResponse
+    {
+        $user = auth()->user();
+
+        return response()->json([
+            'status' => 'success',
+            'response_code' => 200,
+            'message' => 'Authenticated user info.',
+            'data' => $user,
+        ], 200);
+    }
 
     public function updateProfile(Request $request)
     {

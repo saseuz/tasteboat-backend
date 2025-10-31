@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Backend\Admin;
+use App\Traits\HasImageUpload;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Intervention\Image\ImageManager;
 
 class AdminController extends Controller
 {
+    use HasImageUpload;
+
     public function __construct()
     {
         $this->middleware('permission:view-admin,admin')->only(['index', 'show']);
@@ -65,7 +65,7 @@ class AdminController extends Controller
         $admin->assignRole($validated['role']);
 
         if ($request->hasFile('profile')) {
-            $profile = $this->_saveImage($request);
+            $profile = $this->saveImage($request->file('profile'), 'admins', 400, 400);
             $admin->update(['profile' => $profile]);
         }
 
@@ -134,14 +134,10 @@ class AdminController extends Controller
         }
 
         if ($request->hasFile('profile')) {
-            $oldProfile = $admin->getRawOriginal('profile');
-
-            if ($oldProfile && Storage::disk('public')->exists('admins/' . $oldProfile)) {
-                Storage::disk('public')->delete('admins/' . $oldProfile);
-            }
             
-            $profile = $this->_saveImage($request);
-            $validated['profile'] = $profile;
+            $this->deleteOldImage($admin->getRawOriginal('profile'), 'admins');
+
+            $validated['profile'] = $this->saveImage($request->file('profile'), 'admins', 400, 400);
         }
 
         $admin->update($validated);
@@ -170,26 +166,9 @@ class AdminController extends Controller
                 ->with('error', 'You cannot delete yourself. or same role as you.');
         }
 
-        // $oldProfile = $admin->getRawOriginal('profile');
-        // if ($oldProfile && Storage::disk('public')->exists('admins/' . $oldProfile)) {
-        //     Storage::disk('public')->delete('admins/' . $oldProfile);
-        // }
-
         $admin->delete();
 
         return redirect()->route(admin_route_name() . 'admins.index')
             ->with('success', 'Admin deleted successfully.');
-    }
-
-    private function _saveImage($request)
-    {
-        $file = $request->file('profile');
-        $fileName = uniqid() . '_' . $file->getClientOriginalName();
-        $manager = new ImageManager(new Driver());
-        $image = $manager->read($file)
-            ->resize(600, 600)
-            ->save(storage_path('app/public/admins/' . $fileName));
-
-        return $fileName;
     }
 }

@@ -64,6 +64,11 @@ class Recipe extends Model
         return $this->favourites->count();
     }
 
+    public function favouritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favourites', 'recipe_id', 'user_id')->withTimestamps();
+    }
+
     protected static function newFactory()
     {
         return RecipeFactory::new();

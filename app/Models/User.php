@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\UserStatus;
+use App\Models\Backend\Favourite;
 use App\Models\Backend\Recipe;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -58,5 +59,10 @@ class User extends Authenticatable
     public function recipes()
     {
         return $this->hasMany(Recipe::class);
+    }
+
+    public function favouriteRecipes()
+    {
+        return $this->belongsToMany(Favourite::class, 'favourites', 'user_id', 'recipe_id')->withTimestamps();
     }
 }

@@ -13,9 +13,22 @@ Route::post('/refresh', [AuthController::class, 'refreshToken']);
 Route::group(['middleware' => ['auth:api']], function() {
     Route::post('/logout', [AuthController::class, 'logout']);
     
+    // User profile
     Route::get('/profile', [UserController::class, 'profile']);
     Route::post('user/update-profile', [UserController::class, 'updateProfile']);
 
-    Route::get('/recipes', [RecipeController::class, 'list']);
+    // Create new recipe 
     Route::post('/recipes', [RecipeController::class, 'create']);
+
+    // Favourite recipes
+    Route::get('/favourite-recipes', [RecipeController::class, 'favouriteRecipes']);
+    Route::post('/recipes/{slug}/favourite', [RecipeController::class, 'favouriteToggle']);
+
+    // Rating routes
+    Route::post('/recipes/{slug}/rating', [RecipeController::class, 'ratingSubmit']);
+
 });
+
+// Public recipe routes
+Route::get('/recipes', [RecipeController::class, 'list']);
+Route::get('/recipes/{slug}', [RecipeController::class, 'detail']);

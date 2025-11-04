@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\RecipeCommentController;
 use App\Http\Controllers\Api\RecipeController;
+use App\Http\Controllers\Api\RecipeFavouriteController;
+use App\Http\Controllers\Api\RecipeRatingController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,14 +21,17 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::post('user/update-profile', [UserController::class, 'updateProfile']);
 
     // Create new recipe 
-    Route::post('/recipes', [RecipeController::class, 'create']);
+    Route::post('/recipes', [RecipeController::class, 'store']);
 
     // Favourite recipes
-    Route::get('/favourite-recipes', [RecipeController::class, 'favouriteRecipes']);
-    Route::post('/recipes/{slug}/favourite', [RecipeController::class, 'favouriteToggle']);
+    Route::get('/favourite-recipes', [RecipeFavouriteController::class, 'favouriteRecipes']);
+    Route::post('/recipes/{slug}/favourite', [RecipeFavouriteController::class, 'favouriteToggle']);
 
     // Rating routes
-    Route::post('/recipes/{slug}/rating', [RecipeController::class, 'ratingSubmit']);
+    Route::post('/recipes/{slug}/rating', [RecipeRatingController::class, 'store']);
+
+    // Comment routes
+    Route::post('/recipes/{slug}/comments', [RecipeCommentController::class, 'store']);
 
 });
 

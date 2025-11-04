@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecipeApiRequest;
+use App\Http\Resources\RecipeDetailResource;
+use App\Http\Resources\RecipeListResource;
+use App\Http\Resources\RecipeResource;
 use App\Models\Backend\Recipe;
 use App\Traits\HasImageUpload;
 use Illuminate\Http\JsonResponse;
@@ -16,22 +19,27 @@ class RecipeController extends Controller
     public function list(): JsonResponse
     {
         $recipes = Recipe::latest()->paginate();
-
-        return response()->json([
-            'recipes' => $recipes
-        ]);
+        
+        return RecipeListResource::collection($recipes)->additional([
+                    'status' => 'success',
+                    'response_code' => 200,
+                    'message' => 'Recipes retrieved successfully',
+                ])
+                ->response()
+                ->setStatusCode(200);
     }
 
     public function myRecipes(): JsonResponse
     {
         $recipes = Recipe::where('user_id', auth()->user()->id)->latest()->paginate();
 
-        return response()->json([
-            'status' => 'success',
-            'response_code' => 200,
-            'message' => 'My recipes retrieved successfully',
-            'data' => $recipes,
-        ], 200);
+        return RecipeListResource::collection($recipes)->additional([
+                    'status' => 'success',
+                    'response_code' => 200,
+                    'message' => 'My recipes retrieved successfully',
+                ])
+                ->response()
+                ->setStatusCode(200);
     }
 
     public function store(RecipeApiRequest $request): JsonResponse
@@ -53,24 +61,27 @@ class RecipeController extends Controller
 
         $recipe->ingredients()->createMany($validatedData['ingredients']);
 
-        return response()->json([
-            'status' => 'success',
-            'response_code' => 201,
-            'message' => 'Recipe created successfully.',
-            'data' => $recipe,
-        ], 201);
+        return new RecipeDetailResource($recipe)->additional([
+                    'status' => 'success',
+                    'response_code' => 201,
+                    'message' => 'Recipe created successfully.',
+                ])
+                ->response()
+                ->setStatusCode(201);
     }
 
     public function detail(string $slug): JsonResponse
     {
-        $recipe = Recipe::where('slug', $slug)->first();
+        $recipe = Recipe::with('categories', 'ingredients', 'comments.replies', 'comments.user', 'user')
+                    ->where('slug', $slug)->first();
 
-        return response()->json([
-            'status' => 'success',
-            'response_code' => 200,
-            'message' => 'Recipe detail info.',
-            'data' => $recipe,
-        ], 200);
+        return new RecipeDetailResource($recipe)->additional([
+                    'status' => 'success',
+                    'response_code' => 200,
+                    'message' => 'Recipe detail info.',
+                ])
+                ->response()
+                ->setStatusCode(200);
     }
 
     public function update(RecipeApiRequest $request, string $slug): JsonResponse
@@ -79,12 +90,13 @@ class RecipeController extends Controller
         $validatedData = $request->validated();
 
         if ($recipe->user_id !== auth()->user()->id) {
-            return response()->json([
-                'status' => 'error',
-                'response_code' => 403,
-                'message' => 'You are not authorized to update this recipe.',
-                'data' => $recipe,
-            ], 403);
+            return new RecipeDetailResource($recipe)->additional([
+                    'status' => 'error',
+                    'response_code' => 403,
+                    'message' => 'You are not authorized to update this recipe.',
+                ])
+                ->response()
+                ->setStatusCode(403);
         }
 
         if ($request->hasFile('image')) {
@@ -109,12 +121,13 @@ class RecipeController extends Controller
             $recipe->ingredients()->createMany($validatedData['ingredients']);
         }
 
-        return response()->json([
-            'status' => 'success',
-            'response_code' => 200,
-            'message' => 'Recipe updated successfully.',
-            'data' => $recipe,
-        ], 200);
+        return new RecipeDetailResource($recipe)->additional([
+                    'status' => 'success',
+                    'response_code' => 200,
+                    'message' => 'Recipe updated successfully',
+                ])
+                ->response()
+                ->setStatusCode(200);
     }
 
     public function destroy(string $slug): JsonResponse
@@ -122,21 +135,23 @@ class RecipeController extends Controller
         $recipe = Recipe::where('slug', $slug)->firstOrFail();
 
         if ($recipe->user_id !== auth()->user()->id) {
-            return response()->json([
-                'status' => 'error',
-                'response_code' => 403,
-                'message' => 'You are not authorized to delete this recipe.',
-                'data' => $recipe,
-            ], 403);
+            return new RecipeDetailResource($recipe)->additional([
+                    'status' => 'error',
+                    'response_code' => 403,
+                    'message' => 'You are not authorized to delete this recipe.',
+                ])
+                ->response()
+                ->setStatusCode(403);
         }
 
         $recipe->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'response_code' => 204,
-            'message' => 'Recipe deleted successfully.',
-            'data' => $recipe,
-        ], 204);
+        return new RecipeDetailResource($recipe)->additional([
+                    'status' => 'success',
+                    'response_code' => 204,
+                    'message' => 'Recipe deleted successfully.',
+                ])
+                ->response()
+                ->setStatusCode(204);
     }
 }

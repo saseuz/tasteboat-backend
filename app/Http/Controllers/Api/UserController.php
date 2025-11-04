@@ -24,7 +24,7 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(Request $request): JsonResponse
     {
         $rules = [
             'name' => 'required|string|max:255',
@@ -45,7 +45,12 @@ class UserController extends Controller
 
         // Update password check
         if ($request->filled('old_password') && $hashChecked) {
-            return back()->withErrors(['old_password' => 'The old password is incorrect.']);
+            return response()->json([
+                'status' => 'error',
+                'response_code' => 422,
+                'message' => 'The old password is incorrect.',
+                'errors' => ['old_password' => 'The old password is incorrect.'],
+            ], 422);
         }
 
         // Update avatar

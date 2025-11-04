@@ -20,10 +20,13 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::get('/profile', [UserController::class, 'profile']);
     Route::post('user/update-profile', [UserController::class, 'updateProfile']);
 
-    // Create new recipe 
+    // private recipe routes 
+    Route::get('/recipes/my-recipes', [RecipeController::class, 'myRecipes']);
     Route::post('/recipes', [RecipeController::class, 'store']);
+    Route::post('/recipes/{slug}/update', [RecipeController::class, 'update']);
+    Route::delete('/recipes/{slug}/delete', [RecipeController::class, 'destroy']);
 
-    // Favourite recipes
+    // Favourite recipes routes
     Route::get('/favourite-recipes', [RecipeFavouriteController::class, 'favouriteRecipes']);
     Route::post('/recipes/{slug}/favourite', [RecipeFavouriteController::class, 'favouriteToggle']);
 
@@ -37,4 +40,4 @@ Route::group(['middleware' => ['auth:api']], function() {
 
 // Public recipe routes
 Route::get('/recipes', [RecipeController::class, 'list']);
-Route::get('/recipes/{slug}', [RecipeController::class, 'detail']);
+Route::get('/recipes/{slug}/detail', [RecipeController::class, 'detail']);

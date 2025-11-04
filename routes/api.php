@@ -20,7 +20,7 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::get('/profile', [UserController::class, 'profile']);
     Route::post('user/update-profile', [UserController::class, 'updateProfile']);
 
-    // private recipe routes 
+    // Private recipe routes 
     Route::get('/recipes/my-recipes', [RecipeController::class, 'myRecipes']);
     Route::post('/recipes', [RecipeController::class, 'store']);
     Route::post('/recipes/{slug}/update', [RecipeController::class, 'update']);

@@ -38,6 +38,7 @@ class RecipeController extends Controller
     {
         $validatedData = $request->validated();
         $validatedData['user_id'] = $request->user()->id;
+        // json_decode ingredients|string to array
 
         if ($request->hasFile('image')) {
             // Thumbnail Image

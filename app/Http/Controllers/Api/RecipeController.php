@@ -124,7 +124,7 @@ class RecipeController extends Controller
             return response()->json([
                 'status' => 'error',
                 'response_code' => 403,
-                'message' => 'You are not authorized to update this recipe.',
+                'message' => 'You are not authorized to delete this recipe.',
                 'data' => $recipe,
             ], 403);
         }

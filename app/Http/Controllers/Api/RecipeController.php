@@ -18,7 +18,7 @@ class RecipeController extends Controller
     
     public function list(): JsonResponse
     {
-        $recipes = Recipe::latest()->paginate();
+        $recipes = Recipe::with('categories')->latest()->paginate();
         
         return RecipeListResource::collection($recipes)->additional([
                     'status' => 'success',
@@ -31,7 +31,10 @@ class RecipeController extends Controller
 
     public function myRecipes(): JsonResponse
     {
-        $recipes = Recipe::where('user_id', auth()->user()->id)->latest()->paginate();
+        $recipes = Recipe::with('categories')
+                    ->where('user_id', auth()->user()->id)
+                    ->latest()
+                    ->paginate();
 
         return RecipeListResource::collection($recipes)->additional([
                     'status' => 'success',
@@ -73,7 +76,8 @@ class RecipeController extends Controller
     public function detail(string $slug): JsonResponse
     {
         $recipe = Recipe::with('categories', 'ingredients', 'comments.replies', 'comments.user', 'user')
-                    ->where('slug', $slug)->first();
+                    ->where('slug', $slug)
+                    ->firstOrFail();
 
         return new RecipeDetailResource($recipe)->additional([
                     'status' => 'success',
@@ -86,7 +90,10 @@ class RecipeController extends Controller
 
     public function update(RecipeApiRequest $request, string $slug): JsonResponse
     {
-        $recipe = Recipe::where('slug', $slug)->firstOrFail();
+        $recipe = Recipe::with('categories', 'ingredients', 'comments.replies', 'comments.user', 'user')
+                    ->where('slug', $slug)
+                    ->firstOrFail();
+
         $validatedData = $request->validated();
 
         if ($recipe->user_id !== auth()->user()->id) {
@@ -132,7 +139,9 @@ class RecipeController extends Controller
 
     public function destroy(string $slug): JsonResponse
     {
-        $recipe = Recipe::where('slug', $slug)->firstOrFail();
+        $recipe = Recipe::with('categories', 'ingredients', 'comments.replies', 'comments.user', 'user')
+                    ->where('slug', $slug)
+                    ->firstOrFail();
 
         if ($recipe->user_id !== auth()->user()->id) {
             return new RecipeDetailResource($recipe)->additional([

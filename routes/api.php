@@ -35,6 +35,8 @@ Route::group(['middleware' => ['auth:api']], function() {
 
     // Comment routes
     Route::post('/recipes/{slug}/comments', [RecipeCommentController::class, 'store']);
+    Route::put('/comments/{comment}/update', [RecipeCommentController::class, 'update']);
+    Route::delete('/comments/{comment}/delete', [RecipeCommentController::class, 'destroy']);
 
 });
 

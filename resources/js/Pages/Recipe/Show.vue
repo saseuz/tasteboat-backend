@@ -96,7 +96,10 @@ let toggleTrashed = () => {
                 <!-- Image -->
                 <div class="xs:col-span-3">
                     <div class="bg-slate-900 max-w-full h-auto">
-                        <img class="max-w-full h-auto bg-red-900" src="https://placehold.co/600x400" :alt="recipe.title">
+                        <img 
+                            class="max-w-full h-auto bg-red-900"  
+                            :src="recipe.thumbnail ?? 'https://placehold.co/600x400'"
+                            :alt="recipe.title">
                     </div>
                 </div>
 

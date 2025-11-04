@@ -25,9 +25,9 @@ class RecipeCommentController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'response_code' => 200,
+            'response_code' => 201,
             'message' => 'Comment submitted successfully.',
             'data' => $comment,
-        ], 200);
+        ], 201);
     }
 }

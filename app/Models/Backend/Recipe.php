@@ -7,6 +7,7 @@ use App\Enums\Enums\RecipeStatus;
 use App\Models\Backend\Cuisine;
 use App\Models\User;
 use Database\Factories\RecipeFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,7 +22,8 @@ class Recipe extends Model
 
     protected $fillable = [
         'title', 'slug', 'description', 'instructions', 'prep_time', 'cook_time',
-        'servings', 'difficulty', 'thumbnail', 'status', 'cuisine_id'
+        'servings', 'difficulty', 'thumbnail', 'status', 'cuisine_id', 'user_id',
+        'image',
     ];
 
     public function cuisine()
@@ -72,6 +74,20 @@ class Recipe extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class, 'recipe_id');
+    }
+
+    public function thumbnail(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset('storage/recipes/thumbnails/' . $value) : null,
+        );
+    }
+
+    public function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset('storage/recipes/' . $value) : null,
+        );
     }
 
     protected static function newFactory()

@@ -15,7 +15,7 @@ class RecipeFavouriteController extends Controller
     {
         $recipes = Recipe::with('categories')
                     ->whereHas('favourites', function ($query) {
-                        $query->where('user_id', auth()->user()->id);
+                        $query->where('user_id', auth('api')->user()->id);
                     })->latest()->paginate();
 
         return RecipeListResource::collection($recipes)->additional([
@@ -33,7 +33,7 @@ class RecipeFavouriteController extends Controller
                     ->where('slug', $slug)
                     ->firstOrFail();
                     
-        $user = auth()->user();
+        $user = auth('api')->user();
 
         $favourite = Favourite::where('user_id', $user->id)
                                 ->where('recipe_id', $recipe->id)

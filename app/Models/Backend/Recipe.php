@@ -66,6 +66,17 @@ class Recipe extends Model
         return $this->favourites->count();
     }
 
+    public function favouriteByUser()
+    {
+        $user = auth('api')->user();
+
+        if (!$user) return null;
+
+        return $this->favourites()
+                ->where('user_id', $user->id)
+                ->exists();
+    }
+
     public function favouritedBy()
     {
         return $this->belongsToMany(User::class, 'favourites', 'recipe_id', 'user_id')->withTimestamps();

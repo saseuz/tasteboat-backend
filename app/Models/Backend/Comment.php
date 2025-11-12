@@ -32,7 +32,7 @@ class Comment extends Model
 
     public function replies()
     {
-        return $this->hasMany(Comment::class, 'parent_id')->with('replies');
+        return $this->hasMany(Comment::class, 'parent_id')->with('replies')->latest();
     }
 
     protected static function newFactory()

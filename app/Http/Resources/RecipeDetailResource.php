@@ -39,8 +39,6 @@ class RecipeDetailResource extends JsonResource
             ],
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients')),
-            'comments' => CommentResource::collection($this->whenLoaded('comments')),
-            
         ];
     }
 }

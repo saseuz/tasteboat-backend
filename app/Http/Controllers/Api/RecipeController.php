@@ -32,7 +32,7 @@ class RecipeController extends Controller
     public function myRecipes(): JsonResponse
     {
         $recipes = Recipe::with('categories')
-                    ->where('user_id', auth()->user()->id)
+                    ->where('user_id', auth('api')->user()->id)
                     ->latest()
                     ->paginate();
 
@@ -96,7 +96,7 @@ class RecipeController extends Controller
 
         $validatedData = $request->validated();
 
-        if ($recipe->user_id !== auth()->user()->id) {
+        if ($recipe->user_id !== auth('api')->user()->id) {
             return new RecipeDetailResource($recipe)->additional([
                     'status' => 'error',
                     'response_code' => 403,
@@ -143,7 +143,7 @@ class RecipeController extends Controller
                     ->where('slug', $slug)
                     ->firstOrFail();
 
-        if ($recipe->user_id !== auth()->user()->id) {
+        if ($recipe->user_id !== auth('api')->user()->id) {
             return new RecipeDetailResource($recipe)->additional([
                     'status' => 'error',
                     'response_code' => 403,

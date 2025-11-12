@@ -43,3 +43,6 @@ Route::group(['middleware' => ['auth:api']], function() {
 // Public recipe routes
 Route::get('/recipes', [RecipeController::class, 'list']);
 Route::get('/recipes/{slug}/detail', [RecipeController::class, 'detail']);
+
+// Public comment routes
+Route::get('/recipes/{slug}/comments', [RecipeCommentController::class, 'commentsByRecipe']);

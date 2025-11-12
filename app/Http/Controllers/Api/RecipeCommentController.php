@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CommentResource;
 use App\Models\Backend\Comment;
 use App\Models\Backend\Recipe;
 use Illuminate\Http\JsonResponse;
@@ -10,6 +11,19 @@ use Illuminate\Http\Request;
 
 class RecipeCommentController extends Controller
 {
+    public function commentsByRecipe(string $slug): JsonResponse
+    {
+        $recipe = Recipe::where('slug', $slug)->first();
+
+        return CommentResource::collection($recipe->commentsWithoutReplies)->additional([
+                    'status' => 'success',
+                    'response_code' => 200,
+                    'message' => 'Comments retrieved successfully',
+                ])
+                ->response()
+                ->setStatusCode(200);
+    }
+    
     public function store(string $slug, Request $request): JsonResponse
     {
         $request->validate([
@@ -20,17 +34,18 @@ class RecipeCommentController extends Controller
         $recipe = Recipe::where('slug', $slug)->first();
 
         $comment = $recipe->comments()->create([
-            'user_id' => auth()->user()->id,
+            'user_id' => auth('api')->user()->id,
             'parent_id' => $request->parent_id,
             'content' => $request->content,
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'response_code' => 201,
-            'message' => 'Comment submitted successfully.',
-            'data' => $comment,
-        ], 201);
+        return new CommentResource($comment)->additional([
+                    'status' => 'success',
+                    'response_code' => 201,
+                    'message' => 'Comments submitted successfully',
+                ])
+                ->response()
+                ->setStatusCode(201);
     }
 
     public function update(Comment $comment, Request $request)
@@ -39,7 +54,7 @@ class RecipeCommentController extends Controller
             'content' => 'required|string|max:1000',
         ]);
 
-        if ($comment->user_id !== auth()->user()->id) {
+        if ($comment->user_id !== auth('api')->user()->id) {
             return response()->json([
                 'status' => 'error',
                 'response_code' => 403,
@@ -50,17 +65,18 @@ class RecipeCommentController extends Controller
 
         $comment->update($validatedData);
 
-        return response()->json([
-            'status' => 'success',
-            'response_code' => 200,
-            'message' => 'Comment updated successfully.',
-            'data' => $comment,
-        ], 200);
+        return new CommentResource($comment)->additional([
+                    'status' => 'success',
+                    'response_code' => 200,
+                    'message' => 'Comments updated successfully',
+                ])
+                ->response()
+                ->setStatusCode(200);
     }
 
     public function destroy(Comment $comment): JsonResponse
     {
-        if ($comment->user_id !== auth()->user()->id) {
+        if ($comment->user_id !== auth('api')->user()->id) {
             return response()->json([
                 'status' => 'error',
                 'response_code' => 403,
@@ -71,11 +87,12 @@ class RecipeCommentController extends Controller
 
         $comment->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'response_code' => 204,
-            'message' => 'Comment deleted successfully.',
-            'data' => $comment,
-        ], 204);
+        return new CommentResource($comment)->additional([
+                    'status' => 'success',
+                    'response_code' => 204,
+                    'message' => 'Comments deleted successfully',
+                ])
+                ->response()
+                ->setStatusCode(204);
     }
 }

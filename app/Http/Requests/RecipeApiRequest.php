@@ -36,12 +36,12 @@ class RecipeApiRequest extends FormRequest
             'status' => ['required', new Enum(RecipeStatus::class)],
             'image' => 'nullable|image|max:2048',
 
-            'categories' => 'required|array|min:1',
+            'categories' => 'required|json|min:1',
             'categories.*' => 'exists:categories,id',
             
-            'ingredients' => 'required|array|min:1',
+            'ingredients' => 'required|json|min:1',
             'ingredients.*.name' => 'required|string|max:255',
-            'ingredients.*.quantity' => 'required|string|max:100',
+            'ingredients.*.quantity' => 'required|number|max:100',
             'ingredients.*.unit' => 'required|string|max:100',
             'ingredients.*.note' => 'nullable|string|max:255',
         ];

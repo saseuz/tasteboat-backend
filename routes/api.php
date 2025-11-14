@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CuisineController;
 use App\Http\Controllers\Api\RecipeCommentController;
 use App\Http\Controllers\Api\RecipeController;
 use App\Http\Controllers\Api\RecipeFavouriteController;
@@ -37,6 +39,12 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::post('/recipes/{slug}/comments', [RecipeCommentController::class, 'store']);
     Route::put('/comments/{comment}/update', [RecipeCommentController::class, 'update']);
     Route::delete('/comments/{comment}/delete', [RecipeCommentController::class, 'destroy']);
+
+    // Categroy routes
+    Route::get('categories/all', [CategoryController::class, 'list']);
+
+    // Cuisine routes
+    Route::get('cuisines/all', [CuisineController::class, 'list']);
 
 });
 

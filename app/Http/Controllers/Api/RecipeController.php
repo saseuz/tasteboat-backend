@@ -122,10 +122,12 @@ class RecipeController extends Controller
 
         $recipe->update($validatedData);
         if (isset($validatedData['categories'])) {
+            $validatedData['categories'] = json_decode($validatedData['categories'], true);
             $recipe->categories()->sync($validatedData['categories']);
         }
 
         if (isset($validatedData['ingredients'])) {
+            $validatedData['ingredients'] = json_decode($validatedData['ingredients'], true);
             $recipe->ingredients()->delete();
             $recipe->ingredients()->createMany($validatedData['ingredients']);
         }

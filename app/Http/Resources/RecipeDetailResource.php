@@ -17,7 +17,10 @@ class RecipeDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'cuisine' => $this->cuisine->name,
+            'cuisine' => [
+                'id' => $this->cuisine->id,
+                'name' => $this->cuisine->name,
+            ],
             'slug' => $this->slug,
             'status' => $this->status->label(),
             'difficulty' => $this->difficulty->label(),

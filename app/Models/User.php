@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\UserStatus;
 use App\Models\Backend\Favourite;
 use App\Models\Backend\Recipe;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -54,6 +55,13 @@ class User extends Authenticatable
             'password' => 'hashed',
             'status' => UserStatus::class,
         ];
+    }
+
+    public function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset('storage/users/' . $value) : null,
+        );
     }
 
     public function recipes()

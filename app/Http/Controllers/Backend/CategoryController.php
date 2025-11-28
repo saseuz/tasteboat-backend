@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Backend\Category;
+use App\Traits\HasImageUpload;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
+    use HasImageUpload;
+    
     /**
      * Display a listing of the resource.
      */
@@ -36,9 +39,15 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:150',
+            'image' => 'required|image',
         ]);
 
-        Category::create($validated);
+        $category = Category::create($validated);
+
+        if ($request->hasFile('image')) {
+            $image = $this->saveImage($request->file('image'), 'categories', 400, 400);
+            $category->update(['image' => $image]);
+        }
 
         return redirect()->route(admin_route_name() . 'categories.index')
             ->with('success', 'Category created successfully.');
@@ -75,9 +84,17 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:150',
+            'image' => 'nullable|image',
         ]);
 
         $category = Category::findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            // Delete old image
+            $this->deleteOldImage($category->getRawOriginal('image'), 'categories');
+
+            $validated['image'] = $this->saveImage($request->file('image'), 'categories', 400, 400);
+        }
 
         $category->update($validated);
 
@@ -93,6 +110,7 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
+        $this->deleteOldImage($category->getRawOriginal('image'), 'categories');
         $category->delete();
 
         return redirect()->route(admin_route_name() . 'categories.index')

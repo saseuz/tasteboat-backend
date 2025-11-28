@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Enums\RecipeDifficulty;
-use App\Enums\Enums\RecipeStatus;
+use App\Enums\RecipeDifficulty;
+use App\Enums\RecipeStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 

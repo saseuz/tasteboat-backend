@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Enums\Enums\RecipeStatus;
+use App\Enums\RecipeStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Backend\Comment;
 use App\Models\Backend\Recipe;

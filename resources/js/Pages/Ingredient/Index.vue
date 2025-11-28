@@ -72,7 +72,7 @@ let form = useForm({
                         <TableCell class="font-medium">
                         {{ ingredient.id}}
                         </TableCell>
-                        <TableCell>{{ ingredient.recipe.title  }}</TableCell>
+                        <TableCell>{{ ingredient.recipe?.title || `In Trashed!`  }}</TableCell>
                         <TableCell>{{ ingredient.name  }}</TableCell>
                         <TableCell class="text-right space-x-2">
                             <!-- <Link

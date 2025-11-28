@@ -13,13 +13,16 @@ let props = defineProps({
 
 let form = useForm({
     name: props.category?.name || '',
+    image: null,
+    _method: null,
 });
 
 let submit = () => {
     let actionRoute = props.routeName;
 
     if (props.isEdit && props.category) {
-        form.put(route(config.admin_route_name + actionRoute, props.category.id), {
+        form._method = 'PUT';
+        form.post(route(config.admin_route_name + actionRoute, props.category.id), {
             onSuccess: () => {
                 form.reset();
             },
@@ -43,6 +46,20 @@ let submit = () => {
                 </Label>
                 <Input id="name" type="text" v-model="form.name" required placeholder="Enter Category Name" class="w-full shadow-xl" />
                 <span v-if="form.errors.name" class="text-red-600 text-sm font-medium">{{ form.errors.name }}</span>
+            </div>
+
+            <div class="space-y-2">
+                <Label htmlFor="image" class="text-sm font-medium">
+                    Image <span class="text-red-600">*</span>
+                </Label>
+                <Input 
+                    id="image" 
+                    type="file" 
+                    @change="e => form.image = e.target.files[0]"
+                    class="w-full shadow-xl"
+                />
+                <span v-if="form.errors.image" class="text-red-600 text-sm font-medium">{{ form.errors.image }}</span>
+                <img :src="props.category.image" :alt="props.category.name" class="mt-2 w-20 h-20 object-cover" v-if="props.category?.image" />
             </div>
         </div>
 

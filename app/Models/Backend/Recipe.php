@@ -2,8 +2,8 @@
 
 namespace App\Models\Backend;
 
-use App\Enums\Enums\RecipeDifficulty;
-use App\Enums\Enums\RecipeStatus;
+use App\Enums\RecipeDifficulty;
+use App\Enums\RecipeStatus;
 use App\Models\Backend\Cuisine;
 use App\Models\User;
 use Database\Factories\RecipeFactory;

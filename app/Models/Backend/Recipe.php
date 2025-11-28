@@ -77,6 +77,17 @@ class Recipe extends Model
                 ->exists();
     }
 
+    public function ratedByUser()
+    {
+        $user = auth('api')->user();
+
+        if (!$user) return null;
+
+        return $this->ratings()
+                ->where('user_id', $user->id)
+                ->exists();
+    }
+
     public function favouritedBy()
     {
         return $this->belongsToMany(User::class, 'favourites', 'recipe_id', 'user_id')->withTimestamps();

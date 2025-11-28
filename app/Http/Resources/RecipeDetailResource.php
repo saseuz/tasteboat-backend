@@ -39,6 +39,7 @@ class RecipeDetailResource extends JsonResource
                 'name' => $this->user->name,
                 'avatar' => $this->user->avatar,
                 'favourited' => $this->favouriteByUser(),
+                'rated' => $this->ratedByUser(),
                 'bio' => $this->user->bio,
             ],
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),

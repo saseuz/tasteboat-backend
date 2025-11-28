@@ -13,14 +13,17 @@ let props = defineProps({
 
 let form = useForm({
     name: props.cuisine?.name || '',
+    image: props.cuisine?.image || null,
     description: props.cuisine?.description || '', 
+    _method: null,
 });
 
 let submit = () => {
     let actionRoute = props.routeName;
 
     if (props.isEdit && props.cuisine) {
-        form.put(route(config.admin_route_name + actionRoute, props.cuisine.id), {
+        form._method = 'PUT';
+        form.post(route(config.admin_route_name + actionRoute, props.cuisine.id), {
             onSuccess: () => {
                 form.reset();
             },
@@ -48,10 +51,24 @@ let submit = () => {
                 </div>
 
                 <div class="space-y-2">
+                    <Label htmlFor="image" class="text-sm font-medium">
+                        Image <span class="text-red-600">*</span>
+                    </Label>
+                    <Input 
+                        id="image" 
+                        type="file" 
+                        @change="e => form.image = e.target.files[0]"
+                        class="w-full shadow-xl"
+                    />
+                    <span v-if="form.errors.image" class="text-red-600 text-sm font-medium">{{ form.errors.image }}</span>
+                    <img :src="props.cuisine.image" :alt="props.cuisine.name" class="mt-2 w-20 h-20 object-cover" v-if="props.cuisine?.image" />
+                </div>
+
+                <div class="space-y-2">
                     <Label htmlFor="name" class="text-sm font-medium">
                         Description
                     </Label>
-                    <textarea id="description" v-model="form.description" required placeholder="Enter Cuisine Description" class="w-full h-16 px-4 py-2 shadow-xl">
+                    <textarea id="description" v-model="form.description" placeholder="Enter Cuisine Description" class="w-full h-16 px-4 py-2 shadow-xl">
                     </textarea>
                     <span v-if="form.errors.description" class="text-red-600 text-sm font-medium">{{ form.errors.description }}</span>
                 </div>

@@ -4,6 +4,7 @@ namespace App\Models\Backend;
 
 use App\Models\Backend\Recipe;
 use Database\Factories\CuisineFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -16,12 +17,19 @@ class Cuisine extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name', 'description'
+        'name', 'image', 'description'
     ];
 
     public function recipes()
     {
         return $this->hasMany(Recipe::class);
+    }
+
+    public function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset('storage/cuisines/' . $value) : null,
+        );
     }
 
     protected static function boot()

@@ -83,8 +83,7 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:150',
-            'image' => 'nullable|image',
+            'name' => 'required|string|max:150'
         ]);
 
         $category = Category::findOrFail($id);

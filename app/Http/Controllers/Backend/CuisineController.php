@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Backend\Cuisine;
+use App\Traits\HasImageUpload;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CuisineController extends Controller
 {
+    use HasImageUpload;
+
     /**
      * Display a listing of the resource.
      */
@@ -34,14 +37,18 @@ class CuisineController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:250|unique:cuisines,name',
+            'description' => 'nullable|string',
+            'image' => 'required|image'
         ]);
 
-        $cuisine = Cuisine::create([
-            'name' => $request->name,
-            'description' => $request->description
-        ]);
+        $cuisine = Cuisine::create($validated);
+
+        if ($request->hasFile('image')) {
+            $image = $this->saveImage($request->file('image'), 'cuisines', 400, 400);
+            $cuisine->update(['image' => $image]);
+        }
         
         return redirect()->route(admin_route_name() . 'cuisines.index')
             ->with('success', 'Cuisine created successfully.');
@@ -76,16 +83,21 @@ class CuisineController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:250|unique:roles,name,'.$id,
+            'description' => 'nullable|string',
         ]);
 
         $cuisine = Cuisine::findOrFail($id);
+        
+        if ($request->hasFile('image')) {
+            // Delete old image
+            $this->deleteOldImage($cuisine->getRawOriginal('image'), 'cuisines');
 
-        $cuisine->update([
-            'name' => $request->name,
-            'description' => $request->description
-        ]);
+            $validated['image'] = $this->saveImage($request->file('image'), 'cuisines', 400, 400);
+        }
+
+        $cuisine->update($validated);
 
         return redirect()->route(admin_route_name() . 'cuisines.index')
             ->with('success', 'Cuisine updated successfully.');
@@ -98,6 +110,7 @@ class CuisineController extends Controller
     {
         $cuisine = Cuisine::findOrFail($id);
 
+        $this->deleteOldImage($cuisine->getRawOriginal('image'), 'cuisines');
         $cuisine->delete();
 
         return redirect()->route(admin_route_name() . 'cuisines.index')

@@ -128,7 +128,7 @@ class Recipe extends Model
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
             if (empty($model->slug)) {
-                $model->slug = Str::slug($model->title);
+                $model->slug = Str::slug($model->title) . '-' . Str::uuid();
             }
         });
 

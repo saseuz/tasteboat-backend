@@ -40,7 +40,7 @@ class Category extends Model
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
             if (empty($model->slug)) {
-                $model->slug = Str::slug($model->name);
+                $model->slug = Str::slug($model->name) . '-' . Str::uuid();
             }
         });
 

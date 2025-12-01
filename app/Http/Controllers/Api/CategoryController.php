@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function list()
+    public function list(Request $request)
     {
-        $categories = Category::latest()->get();
+        $categories = Category::when($request->has('limit'), function ($q) use ($request) {
+                        $q->limit($request->limit);
+                      })->latest()->get();
+
         return CategoryResource::collection($categories)->additional([
                 'status' => 'success',
                 'response_code' => 200,

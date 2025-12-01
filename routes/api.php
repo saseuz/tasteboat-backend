@@ -40,9 +40,6 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::put('/comments/{comment}/update', [RecipeCommentController::class, 'update']);
     Route::delete('/comments/{comment}/delete', [RecipeCommentController::class, 'destroy']);
 
-    // Categroy routes
-    Route::get('categories/all', [CategoryController::class, 'list']);
-
     // Cuisine routes
     Route::get('cuisines/all', [CuisineController::class, 'list']);
 
@@ -54,3 +51,6 @@ Route::get('/recipes/{slug}/detail', [RecipeController::class, 'detail']);
 
 // Public comment routes
 Route::get('/recipes/{slug}/comments', [RecipeCommentController::class, 'commentsByRecipe']);
+
+// Public categroy routes
+Route::get('categories/all', [CategoryController::class, 'list']);

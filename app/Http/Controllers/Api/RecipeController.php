@@ -16,9 +16,12 @@ class RecipeController extends Controller
 {
     use HasImageUpload;
     
-    public function list(): JsonResponse
+    public function list(Request $request): JsonResponse
     {
-        $recipes = Recipe::with('categories')->latest()->paginate();
+        $recipes = Recipe::query()
+                    ->with('categories')
+                    ->latest()
+                    ->paginate();
         
         return RecipeListResource::collection($recipes)->additional([
                     'status' => 'success',
@@ -40,6 +43,23 @@ class RecipeController extends Controller
                     'status' => 'success',
                     'response_code' => 200,
                     'message' => 'My recipes retrieved successfully',
+                ])
+                ->response()
+                ->setStatusCode(200);
+    }
+
+    public function popularList(Request $request): JsonResponse
+    {
+        $recipes = Recipe::query()
+                    ->with('categories')
+                    ->limit(4)
+                    ->latest()
+                    ->get();
+        
+        return RecipeListResource::collection($recipes)->additional([
+                    'status' => 'success',
+                    'response_code' => 200,
+                    'message' => 'Popular recipes retrieved successfully',
                 ])
                 ->response()
                 ->setStatusCode(200);

@@ -19,9 +19,33 @@ class RecipeController extends Controller
     public function list(Request $request): JsonResponse
     {
         $recipes = Recipe::query()
-                    ->with('categories')
+                    ->with(['categories', 'user', 'cuisine'])
+                    ->when(
+                        $request->filled(['filter', 'query']), 
+                        function ($query) use ($request) {
+
+                        $filter = $request->input('filter');
+                        $rQuery = $request->input('query');
+
+                        match ($filter) {
+                            'title' => $query->where('title', 'like', "%{$rQuery}%"),
+                            'chefs' => $query->whereHas('user', fn ($q) =>
+                                $q->where('name', 'like', "%{$rQuery}%")
+                            ),
+                            'cuisine' => $query->whereHas('cuisine', fn ($q) =>
+                                $q->where('name', 'like', "%{$rQuery}%")
+                            ),
+                            'category' => $query->whereHas('categories', fn ($q) =>
+                                $q->where('name', 'like', "%{$rQuery}%")
+                            ),
+
+                            default => null,
+                        };
+
+                    })
                     ->latest()
-                    ->paginate();
+                    // ->published()
+                    ->paginate(16);
         
         return RecipeListResource::collection($recipes)->additional([
                     'status' => 'success',

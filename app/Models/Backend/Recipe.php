@@ -88,6 +88,11 @@ class Recipe extends Model
                 ->exists();
     }
 
+    public function scopePublished($query)
+    {
+        return $query->where('status', RecipeStatus::PUBLISHED);
+    }
+
     public function favouritedBy()
     {
         return $this->belongsToMany(User::class, 'favourites', 'recipe_id', 'user_id')->withTimestamps();

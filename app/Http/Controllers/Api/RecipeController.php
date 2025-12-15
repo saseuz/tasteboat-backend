@@ -36,7 +36,7 @@ class RecipeController extends Controller
                                 $q->where('name', 'like', "%{$rQuery}%")
                             ),
                             'category' => $query->whereHas('categories', fn ($q) =>
-                                $q->where('name', 'like', "%{$rQuery}%")
+                                $q->where('slug', 'like', "%{$rQuery}%")
                             ),
 
                             default => null,

@@ -13,6 +13,7 @@ let props = defineProps({
 
 let form = useForm({
     name: props.category?.name || '',
+    description: props.category?.description || '',
     image: null,
     _method: null,
 });
@@ -60,6 +61,14 @@ let submit = () => {
                 />
                 <span v-if="form.errors.image" class="text-red-600 text-sm font-medium">{{ form.errors.image }}</span>
                 <img :src="props.category.image" :alt="props.category.name" class="mt-2 w-20 h-20 object-cover" v-if="props.category?.image" />
+            </div>
+
+            <div class="space-y-2">
+                <Label htmlFor="description" class="text-sm font-medium">
+                    Description
+                </Label>
+                <textarea id="description" v-model="form.description" placeholder="Enter Category Description" class="w-full h-20 shadow-xl p-2" />
+                <span v-if="form.errors.description" class="text-red-600 text-sm font-medium">{{ form.errors.description }}</span>
             </div>
         </div>
 

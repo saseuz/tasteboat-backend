@@ -31,7 +31,7 @@ class RecipeListResource extends JsonResource
             'created_at' => $this->created_at->format('d-M-Y H:i:s'),
             'ratings' => $this->avergeRatings(),
             'favourite_count' => $this->favouriteCount(),
-            'comments_count' => $this->commentsCount(),
+            'comment_count' => $this->commentCount(),
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,

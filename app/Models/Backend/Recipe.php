@@ -16,13 +16,23 @@ use Illuminate\Support\Str;
 class Recipe extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'title', 'slug', 'description', 'instructions', 'prep_time', 'cook_time',
-        'servings', 'difficulty', 'thumbnail', 'status', 'cuisine_id', 'user_id',
+        'title',
+        'slug',
+        'description',
+        'instructions',
+        'prep_time',
+        'cook_time',
+        'servings',
+        'difficulty',
+        'thumbnail',
+        'status',
+        'cuisine_id',
+        'user_id',
         'image',
     ];
 
@@ -70,22 +80,24 @@ class Recipe extends Model
     {
         $user = auth('api')->user();
 
-        if (!$user) return null;
+        if (!$user)
+            return null;
 
         return $this->favourites()
-                ->where('user_id', $user->id)
-                ->exists();
+            ->where('user_id', $user->id)
+            ->exists();
     }
 
     public function ratedByUser()
     {
         $user = auth('api')->user();
 
-        if (!$user) return null;
+        if (!$user)
+            return null;
 
         return $this->ratings()
-                ->where('user_id', $user->id)
-                ->exists();
+            ->where('user_id', $user->id)
+            ->exists();
     }
 
     public function scopePublished($query)
@@ -108,7 +120,7 @@ class Recipe extends Model
         return $this->hasMany(Comment::class, 'recipe_id')->where('parent_id', null)->latest();
     }
 
-    public function commentsCount()
+    public function commentCount()
     {
         return $this->comments()->count();
     }
@@ -116,14 +128,14 @@ class Recipe extends Model
     public function thumbnail(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? asset('storage/recipes/thumbnails/' . $value) : null,
+            get: fn($value) => $value ? asset('storage/recipes/thumbnails/' . $value) : null,
         );
     }
 
     public function image(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? asset('storage/recipes/' . $value) : null,
+            get: fn($value) => $value ? asset('storage/recipes/' . $value) : null,
         );
     }
 
@@ -145,11 +157,11 @@ class Recipe extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            if (! $model->getKey()) {
+            if (!$model->getKey()) {
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
             if (empty($model->slug)) {
-                $model->slug = Str::slug($model->title) . '-' . Str::uuid();
+                $model->slug = Str::slug($model->title) . '-' . random_int(1, now()->format('mdyHis'));
             }
         });
 

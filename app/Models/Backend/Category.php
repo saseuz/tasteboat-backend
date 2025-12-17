@@ -16,18 +16,21 @@ class Category extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name', 'slug', 'image'
+        'name',
+        'slug',
+        'image',
+        'description'
     ];
 
     public function recipes()
     {
-        return $this->hasMany(Recipe::class);
+        return $this->belongsToMany(Recipe::class, 'recipe_category_pivot');
     }
 
     public function image(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? asset('storage/categories/' . $value) : null,
+            get: fn($value) => $value ? asset('storage/categories/' . $value) : null,
         );
     }
 
@@ -36,11 +39,11 @@ class Category extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            if (! $model->getKey()) {
+            if (!$model->getKey()) {
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
             if (empty($model->slug)) {
-                $model->slug = Str::slug($model->name) . '-' . Str::uuid();
+                $model->slug = Str::slug($model->name) . '-' . random_int(1, now()->format('mdyHis'));
             }
         });
 

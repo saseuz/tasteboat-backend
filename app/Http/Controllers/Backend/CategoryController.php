@@ -11,7 +11,7 @@ use Inertia\Inertia;
 class CategoryController extends Controller
 {
     use HasImageUpload;
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -39,6 +39,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:150',
+            'description' => 'nullable|string|max:255',
             'image' => 'required|image',
         ]);
 
@@ -71,7 +72,7 @@ class CategoryController extends Controller
     public function edit(string $id)
     {
         $category = Category::findOrFail($id);
-        
+
         return Inertia::render('Category/Edit', [
             'category' => $category,
         ]);
@@ -83,7 +84,8 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:150'
+            'name' => 'required|string|max:150',
+            'description' => 'nullable|string|max:255',
         ]);
 
         $category = Category::findOrFail($id);

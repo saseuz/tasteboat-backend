@@ -108,6 +108,11 @@ class Recipe extends Model
         return $this->hasMany(Comment::class, 'recipe_id')->where('parent_id', null)->latest();
     }
 
+    public function commentsCount()
+    {
+        return $this->comments()->count();
+    }
+
     public function thumbnail(): Attribute
     {
         return Attribute::make(

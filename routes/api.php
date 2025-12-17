@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CookRecipeController;
 use App\Http\Controllers\Api\CuisineController;
 use App\Http\Controllers\Api\RecipeCommentController;
 use App\Http\Controllers\Api\RecipeController;
@@ -15,9 +16,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/refresh', [AuthController::class, 'refreshToken']);
 
-Route::group(['middleware' => ['auth:api']], function() {
+Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    
+
     // User profile
     Route::get('/profile', [UserController::class, 'profile']);
     Route::post('user/update-profile', [UserController::class, 'updateProfile']);
@@ -55,3 +56,6 @@ Route::get('/recipes/{slug}/comments', [RecipeCommentController::class, 'comment
 
 // Public categroy routes
 Route::get('categories/all', [CategoryController::class, 'list']);
+
+// Public cooks recipe routes
+Route::get('/cooks/recipes/top-list', [CookRecipeController::class, 'topList']);

@@ -15,78 +15,85 @@ use Illuminate\Http\Request;
 class RecipeController extends Controller
 {
     use HasImageUpload;
-    
+
     public function list(Request $request): JsonResponse
     {
         $recipes = Recipe::query()
-                    ->with(['categories', 'user', 'cuisine'])
-                    ->when(
-                        $request->filled(['filter', 'query']), 
-                        function ($query) use ($request) {
+            ->with(['categories', 'user', 'cuisine'])
+            ->when(
+                $request->filled(['filter', 'query']),
+                function ($query) use ($request) {
 
-                        $filter = $request->input('filter');
-                        $rQuery = $request->input('query');
+                    $filter = $request->input('filter');
+                    $rQuery = $request->input('query');
 
-                        match ($filter) {
-                            'title' => $query->where('title', 'like', "%{$rQuery}%"),
-                            'chefs' => $query->whereHas('user', fn ($q) =>
-                                $q->where('name', 'like', "%{$rQuery}%")
-                            ),
-                            'cuisine' => $query->whereHas('cuisine', fn ($q) =>
-                                $q->where('name', 'like', "%{$rQuery}%")
-                            ),
-                            'category' => $query->whereHas('categories', fn ($q) =>
-                                $q->where('slug', 'like', "%{$rQuery}%")
-                            ),
+                    match ($filter) {
+                        'title' => $query->where('title', 'like', "%{$rQuery}%"),
+                        'chefs' => $query->whereHas(
+                            'user',
+                            fn($q) =>
+                            $q->where('name', 'like', "%{$rQuery}%")
+                        ),
+                        'cuisine' => $query->whereHas(
+                            'cuisine',
+                            fn($q) =>
+                            $q->where('name', 'like', "%{$rQuery}%")
+                        ),
+                        'category' => $query->whereHas(
+                            'categories',
+                            fn($q) =>
+                            $q->where('slug', 'like', "%{$rQuery}%")
+                        ),
 
-                            default => null,
-                        };
+                        default => null,
+                    };
 
-                    })
-                    ->latest()
-                    // ->published()
-                    ->paginate(16);
-        
+                }
+            )
+            ->latest()
+            // ->published()
+            ->paginate(16);
+
         return RecipeListResource::collection($recipes)->additional([
-                    'status' => 'success',
-                    'response_code' => 200,
-                    'message' => 'Recipes retrieved successfully',
-                ])
-                ->response()
-                ->setStatusCode(200);
+            'status' => 'success',
+            'response_code' => 200,
+            'message' => 'Recipes retrieved successfully',
+        ])
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function myRecipes(): JsonResponse
     {
         $recipes = Recipe::with('categories')
-                    ->where('user_id', auth('api')->user()->id)
-                    ->latest()
-                    ->paginate();
+            ->where('user_id', auth('api')->user()->id)
+            ->latest()
+            ->paginate();
 
         return RecipeListResource::collection($recipes)->additional([
-                    'status' => 'success',
-                    'response_code' => 200,
-                    'message' => 'My recipes retrieved successfully',
-                ])
-                ->response()
-                ->setStatusCode(200);
+            'status' => 'success',
+            'response_code' => 200,
+            'message' => 'My recipes retrieved successfully',
+        ])
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function popularList(Request $request): JsonResponse
     {
         $recipes = Recipe::query()
-                    ->with('categories')
-                    ->limit(4)
-                    ->latest()
-                    ->get();
-        
+            ->with('categories')
+            ->limit(4)
+            ->latest()
+            ->get();
+
         return RecipeListResource::collection($recipes)->additional([
-                    'status' => 'success',
-                    'response_code' => 200,
-                    'message' => 'Popular recipes retrieved successfully',
-                ])
-                ->response()
-                ->setStatusCode(200);
+            'status' => 'success',
+            'response_code' => 200,
+            'message' => 'Popular recipes retrieved successfully',
+        ])
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function store(RecipeApiRequest $request): JsonResponse
@@ -111,43 +118,43 @@ class RecipeController extends Controller
         $recipe->ingredients()->createMany($validatedData['ingredients']);
 
         return new RecipeDetailResource($recipe)->additional([
-                    'status' => 'success',
-                    'response_code' => 201,
-                    'message' => 'Recipe created successfully.',
-                ])
-                ->response()
-                ->setStatusCode(201);
+            'status' => 'success',
+            'response_code' => 201,
+            'message' => 'Recipe created successfully.',
+        ])
+            ->response()
+            ->setStatusCode(201);
     }
 
     public function detail(string $slug): JsonResponse
     {
         $recipe = Recipe::with('categories', 'ingredients', 'comments.replies', 'comments.user', 'user')
-                    ->where('slug', $slug)
-                    ->firstOrFail();
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         return new RecipeDetailResource($recipe)->additional([
-                    'status' => 'success',
-                    'response_code' => 200,
-                    'message' => 'Recipe detail info.',
-                ])
-                ->response()
-                ->setStatusCode(200);
+            'status' => 'success',
+            'response_code' => 200,
+            'message' => 'Recipe detail info.',
+        ])
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function update(RecipeApiRequest $request, string $slug): JsonResponse
     {
         $recipe = Recipe::with('categories', 'ingredients', 'comments.replies', 'comments.user', 'user')
-                    ->where('slug', $slug)
-                    ->firstOrFail();
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         $validatedData = $request->validated();
 
         if ($recipe->user_id !== auth('api')->user()->id) {
             return new RecipeDetailResource($recipe)->additional([
-                    'status' => 'error',
-                    'response_code' => 403,
-                    'message' => 'You are not authorized to update this recipe.',
-                ])
+                'status' => 'error',
+                'response_code' => 403,
+                'message' => 'You are not authorized to update this recipe.',
+            ])
                 ->response()
                 ->setStatusCode(403);
         }
@@ -177,26 +184,26 @@ class RecipeController extends Controller
         }
 
         return new RecipeDetailResource($recipe)->additional([
-                    'status' => 'success',
-                    'response_code' => 200,
-                    'message' => 'Recipe updated successfully',
-                ])
-                ->response()
-                ->setStatusCode(200);
+            'status' => 'success',
+            'response_code' => 200,
+            'message' => 'Recipe updated successfully',
+        ])
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function destroy(string $slug): JsonResponse
     {
         $recipe = Recipe::with('categories', 'ingredients', 'comments.replies', 'comments.user', 'user')
-                    ->where('slug', $slug)
-                    ->firstOrFail();
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         if ($recipe->user_id !== auth('api')->user()->id) {
             return new RecipeDetailResource($recipe)->additional([
-                    'status' => 'error',
-                    'response_code' => 403,
-                    'message' => 'You are not authorized to delete this recipe.',
-                ])
+                'status' => 'error',
+                'response_code' => 403,
+                'message' => 'You are not authorized to delete this recipe.',
+            ])
                 ->response()
                 ->setStatusCode(403);
         }
@@ -204,11 +211,11 @@ class RecipeController extends Controller
         $recipe->delete();
 
         return new RecipeDetailResource($recipe)->additional([
-                    'status' => 'success',
-                    'response_code' => 204,
-                    'message' => 'Recipe deleted successfully.',
-                ])
-                ->response()
-                ->setStatusCode(204);
+            'status' => 'success',
+            'response_code' => 204,
+            'message' => 'Recipe deleted successfully.',
+        ])
+            ->response()
+            ->setStatusCode(204);
     }
 }

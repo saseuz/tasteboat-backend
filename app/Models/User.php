@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\UserStatus;
 use App\Models\Backend\Favourite;
+use App\Models\Backend\Rating;
 use App\Models\Backend\Recipe;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -60,7 +61,7 @@ class User extends Authenticatable
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? asset('storage/users/' . $value) : null,
+            get: fn($value) => $value ? asset('storage/users/' . $value) : null,
         );
     }
 
@@ -72,5 +73,10 @@ class User extends Authenticatable
     public function favouriteRecipes()
     {
         return $this->belongsToMany(Favourite::class, 'favourites', 'user_id', 'recipe_id')->withTimestamps();
+    }
+
+    public function ratings()
+    {
+        return $this->hasManyThrough(Rating::class, Recipe::class);
     }
 }

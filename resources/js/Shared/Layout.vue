@@ -84,7 +84,7 @@ watch(flashError, (value) => {
         </div>
 
         <footer class="flex bg-secondary text-white justify-center items-center h-12">
-            <p class="text-sm font-bold">© {{ new Date().getFullYear() }} {{ config.app_name  }}. All rights reserved.</p>
+            <p class="text-sm font-bold">&copy; {{ new Date().getFullYear() }} {{ config.app_name  }}. All rights reserved.</p>
         </footer>
     </div>
 

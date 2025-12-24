@@ -125,20 +125,41 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
     }
 }
 
 @layer components {
     .sidebar_link {
-        @apply flex items-center gap-3 my-1 p-2 rounded-md text-gray-400 hover:bg-[#137fec] hover:text-white transition fade-in-5;
+        @apply flex text-sm items-center gap-3 my-1 p-2 rounded-md text-gray-400 hover:bg-secondary hover:text-white hover:shadow-md hover:font-medium transition fade-in-5 duration-300;
     }
 
     .sidebar_link.active {
-        @apply bg-[#137fec] text-white font-semibold;
+        @apply bg-secondary shadow-md text-white font-medium;
+    }
+
+    .card {
+        @apply bg-secondary rounded shadow;
+    }
+
+    .card-header {
+        @apply border-b border-slate-700/80 px-4 py-2;
+    }
+
+    .card-header-title {
+        @apply text-lg font-medium;
+    }
+
+    .card-body {
+        @apply p-4;
+    }
+
+    .btn {
+        @apply flex items-center gap-2 px-4 py-2 rounded-md font-medium shadow-md hover:scale-101 hover:shadow-lg transition duration-300 overflow-hidden bg-blue-500;
     }
 }

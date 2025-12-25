@@ -123,6 +123,17 @@ let form = useForm({
                         <span class="text-sm text-slate-400">4 hours ago</span>
                     </div>
                 </div>
+
+                <div class="flex gap-4 border-b border-slate-700/80 px-2 py-4 hover:bg-slate-700/80 transition duration-300">
+                    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061" alt="" class="w-16 h-16 rounded">
+                    <div class="flex justify-between w-full">
+                        <div class="flex flex-col justify-around">
+                            <h5 class="text-lg font-medium">Beef Red Curry</h5>
+                            <p class="text-sm text-slate-400">By Erluekin</p>
+                        </div>
+                        <span class="text-sm text-slate-400">4 hours ago</span>
+                    </div>
+                </div>
             </div>
         </div>
 

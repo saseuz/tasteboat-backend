@@ -7,6 +7,7 @@ import Sidebar from '@/Shared/Sidebar.vue';
 import { Toaster } from '@/components/ui/sonner'
 import 'vue-sonner/style.css'
 import { toast } from 'vue-sonner'
+import Footer from './Footer.vue';
 
 const page = usePage();
 
@@ -43,24 +44,17 @@ watch(flashError, (value) => {
 
     <Head>
         <title>{{ config.app_name  }}</title>
-        <meta name="description" content="A simple Inertia.js app with vue3" head-key="description" />
+        <meta name="description" content="Tasteboat Admin Panel" head-key="description" />
     </Head>
     
     <div class="relative flex flex-col min-h-screen w-full dark group/design-root">
         <div class="flex grow flex-row">
-            <aside class="flex flex-col gap-y-4 border-r border-[#233648] bg-[#111a22] p-4 text-white overflow-y-auto w-64">
-                <div class="flex items-center-gap-2 space-x-1 p-4">
-                    <img src="" alt="" class="w-6 bg-[#137fec]">
-                    <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">{{ config.app_name  }}</h2>
-                </div>
-
-                <Sidebar />
-            </aside>
+            <Sidebar />
 
             <section class="flex flex-col w-full text-white">
                 <header class="flex justify-between border-b border-[#2d3338] px-6 py-4">
                     <div class="flex items-center space-x-2">
-                        <span><PanelsTopLeft /></span>
+                        <PanelsTopLeft />
                     </div>
 
                     <div class="flex items-center space-x-4">
@@ -83,9 +77,7 @@ watch(flashError, (value) => {
             </section>
         </div>
 
-        <footer class="flex bg-secondary text-white justify-center items-center h-12">
-            <p class="text-sm font-bold">&copy; {{ new Date().getFullYear() }} {{ config.app_name  }}. All rights reserved.</p>
-        </footer>
+        <Footer />
     </div>
 
 </template>

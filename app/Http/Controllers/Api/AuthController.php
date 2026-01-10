@@ -7,6 +7,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RefreshTokenRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,31 +17,47 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request): JsonResponse
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $user = User::create($validated);
+        $user = User::create($validated);
 
-            $response = Http::asForm()->post(route('passport.token'), [
-                'grant_type' => 'password',
-                'client_id' => config('passport.password_client_id'),
-                'client_secret' => config('passport.password_client_secret'),
-                'username' => $validated['email'],
-                'password' =>  $validated['password'],
-                'scope' => '',
-            ]);
+        event(new Registered($user));
 
-            $user['token'] = $response->json();
+        $response = Http::asForm()->post(route('passport.token'), [
+            'grant_type' => 'password',
+            'client_id' => config('passport.password_client_id'),
+            'client_secret' => config('passport.password_client_secret'),
+            'username' => $validated['email'],
+            'password' => $validated['password'],
+            'scope' => '',
+        ]);
 
-            return response()->json([
-                'status' => 'success',
-                'response_code' => 201,
-                'message' => 'User has been registered successfully.',
-                'data' => $user,
-            ], 201);
+        $user['token'] = $response->json();
+
+        return response()->json([
+            'status' => 'success',
+            'response_code' => 201,
+            'message' => 'User has been registered successfully.',
+            'data' => $user,
+        ], 201);
     }
 
     public function login(LoginRequest $request): JsonResponse
     {
+        $user = User::query()
+            ->where('email', $request->email)
+            ->where('email_verified_at', '!=', null)
+            ->active()
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'response_code' => 401,
+                'message' => 'User is not active or not verified.'
+            ], 401);
+        }
+
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
 
@@ -49,7 +66,7 @@ class AuthController extends Controller
                 'client_id' => config('passport.password_client_id'),
                 'client_secret' => config('passport.password_client_secret'),
                 'username' => $request->email,
-                'password' =>  $request->password,
+                'password' => $request->password,
                 'scope' => '',
             ]);
 

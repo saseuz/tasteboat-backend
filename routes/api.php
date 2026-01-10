@@ -9,14 +9,17 @@ use App\Http\Controllers\Api\RecipeController;
 use App\Http\Controllers\Api\RecipeFavouriteController;
 use App\Http\Controllers\Api\RecipeRatingController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/refresh', [AuthController::class, 'refreshToken']);
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::post('/email/resend', [VerificationController::class, 'resend']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // User profile

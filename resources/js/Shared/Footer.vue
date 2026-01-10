@@ -1,4 +1,6 @@
 <script setup>
+import config from '@/helpers/config';
+
 
 </script>
 

@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class VerificationController extends Controller
 {
-    public function verify(Request $request): JsonResponse
+    public function verify(Request $request)
     {
         $user = User::query()->findOrFail($request->route('id'));
 
@@ -22,20 +22,14 @@ class VerificationController extends Controller
         }
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Email already verified'
-            ], 200);
+            return redirect(env('VITE_FRONTEND_URL') . '/?verified=1');
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Email verified successfully'
-        ], 200);
+        return redirect(env('VITE_FRONTEND_URL') . '/?verified=true');
     }
 
     public function resend(Request $request): JsonResponse

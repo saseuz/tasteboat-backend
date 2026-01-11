@@ -1,17 +1,17 @@
-# Use Node.js for building frontend assets
+# Stage 1: Build assets (Same as before)
 FROM node:20 AS node_builder
 WORKDIR /app
-COPY package*.json vite.config.js ./
+COPY package*.json ./
 RUN npm ci
-COPY resources ./resources
-COPY public ./public
+COPY . .
 RUN npm run build
 
-# Use PHP with Apache
-FROM php:8.2-apache
+# Stage 2: PHP-FPM + Nginx
+FROM php:8.2-fpm
 
-# Install system dependencies
+# Install system dependencies + Nginx
 RUN apt-get update && apt-get install -y \
+    nginx \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
@@ -20,48 +20,32 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libzip-dev \
-    default-mysql-client
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+    libfreetype6-dev \
+    libjpeg62-turbo-dev
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Copy Nginx config
+COPY nginx.conf /etc/nginx/sites-available/default
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files
-COPY composer.json composer.lock ./
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader --no-scripts
-
 # Copy application code
 COPY . .
-
-# Copy built assets from node_builder
 COPY --from=node_builder /app/public/build ./public/build
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-scripts
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Configure Apache DocumentRoot to public
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-
-# Expose port
+# Expose port 80
 EXPOSE 80
 
-# Entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-ENTRYPOINT ["docker-entrypoint.sh"]
+# Start Script: Run PHP-FPM in background and Nginx in foreground
+CMD php-fpm -D && nginx -g "daemon off;"

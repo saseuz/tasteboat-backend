@@ -18,16 +18,19 @@ class Admin extends Authenticatable
     protected $guarded = 'admin';
 
     protected $fillable = [
-        'name', 'email', 'password', 'profile', 
+        'name',
+        'email',
+        'password',
+        'profile',
         'bio'
     ];
 
-    protected $hidden = [ 'password' ];
+    protected $hidden = ['password'];
 
     public function profile(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? asset('storage/admins/' . $value) : null,
+            get: fn($value) => $value ? s3_url('admins/' . $value) : null,
         );
     }
 
@@ -36,7 +39,7 @@ class Admin extends Authenticatable
         parent::boot();
 
         static::creating(function ($model) {
-            if (! $model->getKey()) {
+            if (!$model->getKey()) {
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });

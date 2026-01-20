@@ -67,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ? asset('storage/users/' . $value) : null,
+            get: fn($value) => $value ? s3_url('users/' . $value) : null,
         );
     }
 

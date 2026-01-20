@@ -128,14 +128,14 @@ class Recipe extends Model
     public function thumbnail(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ? asset('storage/recipes/thumbnails/' . $value) : null,
+            get: fn($value) => $value ? s3_url('recipes/thumbnails/' . $value) : null,
         );
     }
 
     public function image(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ? asset('storage/recipes/' . $value) : null,
+            get: fn($value) => $value ? s3_url('recipes/' . $value) : null,
         );
     }
 

@@ -12,19 +12,21 @@ trait HasImageUpload
     {
         $fileName = uniqid() . '_' . $file->getClientOriginalName();
         $path = "$folder/$fileName";
-        
+
         $manager = new ImageManager(new Driver());
-        $image = $manager->read($file)
-            ->resize($width, $height)
-            ->save(storage_path('app/public/' . $path));
+
+        $image = $manager->read($file)->resize($width, $height);
+        $encodeImage = $image->toJpeg()->toString();
+
+        Storage::disk('s3')->put($path, $encodeImage);
 
         return $fileName;
     }
 
     public function deleteOldImage($oldImage, $folder = 'uploads')
     {
-        if ($oldImage && Storage::disk('public')->exists("$folder/$oldImage")) {
-            Storage::disk('public')->delete("$folder/" . $oldImage);
+        if ($oldImage && Storage::disk('s3')->exists("$folder/$oldImage")) {
+            Storage::disk('s3')->delete("$folder/$oldImage");
         }
     }
 }

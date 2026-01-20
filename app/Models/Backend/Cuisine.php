@@ -17,7 +17,9 @@ class Cuisine extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name', 'image', 'description'
+        'name',
+        'image',
+        'description'
     ];
 
     public function recipes()
@@ -28,7 +30,7 @@ class Cuisine extends Model
     public function image(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? asset('storage/cuisines/' . $value) : null,
+            get: fn($value) => $value ? s3_url('cuisines/' . $value) : null,
         );
     }
 
@@ -37,7 +39,7 @@ class Cuisine extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            if (! $model->getKey()) {
+            if (!$model->getKey()) {
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });

@@ -7,7 +7,7 @@ import config from '@/helpers/config'
 <template>
     <aside class="flex flex-col gap-y-4 border-r border-[#233648] bg-[#111a22] p-4 text-white overflow-y-auto w-64">
         <div class="flex items-center-gap-2 space-x-4 py-2">
-            <img src="" alt="" class="w-6 bg-[#137fec]">
+            <img src="/favicon.svg" alt="" class="w-6 bg-slate-900 shadow-lg shadow-slate-900/50 rounded-sm">
             <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">{{ config.app_name  }}</h2>
         </div>
 

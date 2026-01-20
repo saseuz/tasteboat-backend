@@ -45,6 +45,7 @@ watch(flashError, (value) => {
     <Head>
         <title>{{ config.app_name  }}</title>
         <meta name="description" content="Tasteboat Admin Panel" head-key="description" />
+        <link rel="icon" type="image/x-icon" href="/favicon.svg" />
     </Head>
     
     <div class="relative flex flex-col min-h-screen w-full dark group/design-root">

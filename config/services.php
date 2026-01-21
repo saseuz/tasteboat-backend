@@ -14,6 +14,11 @@ return [
     |
     */
 
+    'api' => [
+        'key' => env('API_SERVICE_KEY'),
+        'endpoint' => env('VITE_FRONTEND_URL'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

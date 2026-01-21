@@ -64,10 +64,10 @@ class UserController extends Controller
         $user->update($validated);
 
         return response()->json([
-                'status' => 'success',
-                'response_code' => 200,
-                'message' => 'User has been updated',
-                'data' => $user,
-            ], 200);
+            'status' => 'success',
+            'response_code' => 200,
+            'message' => 'User has been updated',
+            'data' => $user,
+        ], 200);
     }
 }
